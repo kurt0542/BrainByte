@@ -1,6 +1,5 @@
-package com.example.brainbyte
+package com.example.brainbyte.auth
 
-import android.content.Context
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
@@ -13,6 +12,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
+import com.example.brainbyte.R
 import com.google.android.material.textfield.TextInputEditText
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
