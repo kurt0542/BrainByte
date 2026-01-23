@@ -12,9 +12,6 @@
         android:theme="@style/Theme.BrainByte">
         <activity
             android:name=".AuthActivity"
-            android:exported="false" />
-        <activity
-            android:name=".LoginScreen"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
