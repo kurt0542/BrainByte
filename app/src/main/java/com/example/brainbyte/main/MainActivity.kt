@@ -6,13 +6,15 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.example.brainbyte.CardsFragment
 import com.example.brainbyte.HomeFragment
 import com.example.brainbyte.ImportFragment
-import com.example.brainbyte.ProfileFragment
 import com.example.brainbyte.R
 import com.example.brainbyte.SearchFragment
+import com.example.brainbyte.SettingsFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,6 +24,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
 
         val navHome = findViewById<LinearLayout>(R.id.nav_home)
         val navSearch = findViewById<LinearLayout>(R.id.nav_cards)
@@ -51,7 +59,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         navProfile.setOnClickListener {
-            loadFragment(ProfileFragment())
+            loadFragment(SettingsFragment())
             updateNavColors(navProfile)
         }
 
