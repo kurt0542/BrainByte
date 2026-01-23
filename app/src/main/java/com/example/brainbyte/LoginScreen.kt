@@ -1,22 +1,22 @@
 package com.example.brainbyte
 
-import android.content.Context
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ScrollView
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.core.view.WindowCompat
 import com.google.android.material.textfield.TextInputEditText
 
 class LoginScreen : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
         setContentView(R.layout.activity_login_screen)
 
         val root = findViewById<ScrollView>(R.id.login_root)
@@ -35,9 +35,14 @@ class LoginScreen : AppCompatActivity() {
         val email = findViewById<TextInputEditText>(R.id.et_email)
         val password = findViewById<TextInputEditText>(R.id.et_password)
 
+        email.isFocusableInTouchMode = true
+        password.isFocusableInTouchMode = true
+
         email.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_NEXT) {
                 password.requestFocus()
+                val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.showSoftInput(password, InputMethodManager.SHOW_IMPLICIT)
                 true
             } else false
         }
@@ -48,8 +53,11 @@ class LoginScreen : AppCompatActivity() {
                     val rect = Rect()
                     view.getDrawingRect(rect)
                     root.offsetDescendantRectToMyCoords(view, rect)
-                    root.smoothScrollTo(0, rect.bottom)
+                    val extra = 24
+                    root.smoothScrollTo(0, rect.bottom + extra)
                 }
+                val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
             }
         }
 
@@ -61,5 +69,7 @@ class LoginScreen : AppCompatActivity() {
                 true
             } else false
         }
+
+
     }
 }
