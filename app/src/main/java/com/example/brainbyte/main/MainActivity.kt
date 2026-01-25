@@ -49,12 +49,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         navSearch.setOnClickListener {
-            loadFragment(SearchFragment())
+            loadFragment(CardsFragment())
             updateNavColors(navSearch)
         }
 
         navCart.setOnClickListener {
-            loadFragment(CardsFragment())
+            loadFragment(SearchFragment())
             updateNavColors(navCart)
         }
 
