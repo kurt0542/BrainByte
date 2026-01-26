@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView // Don't forget these imports!
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 
@@ -34,5 +34,12 @@ class SettingsFragment : Fragment() {
 
         reminderRow.findViewById<TextView>(R.id.rowText).text = "Set reminders"
         reminderRow.findViewById<ImageView>(R.id.rowIcon).setImageResource(R.drawable.ic_add)
+
+        reminderRow.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.main, ReminderFragment())
+                .addToBackStack(null)
+                .commit()
+        }
     }
 }
