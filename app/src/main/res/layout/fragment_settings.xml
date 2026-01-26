@@ -125,8 +125,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:checked="true"
-                        app:thumbTint="#6200EE"
-                        app:trackTint="#9575CD" />
+                        app:thumbTint="@color/switch_thumb_color"
+                        app:trackTint="@color/switch_track_color" />
                 </RelativeLayout>
 
                 <Space
