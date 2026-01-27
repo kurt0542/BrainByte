@@ -19,11 +19,12 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/ic_chevron_right"
         android:rotation="180"
-        app:tint="@color/white"
+        android:src="@drawable/ic_chevron_right"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/white" />
+
     <TextView
         android:id="@+id/headerTitle"
         android:layout_width="wrap_content"
@@ -48,19 +49,19 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#fcfcfc"
             android:orientation="vertical"
-            android:padding="24dp"
-            android:background="#fcfcfc">
+            android:padding="24dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="Select Time"
+                android:textAllCaps="true"
                 android:textColor="#888888"
                 android:textSize="14sp"
-                android:textStyle="bold"
-                android:textAllCaps="true" />
+                android:textStyle="bold" />
 
             <TimePicker
                 android:id="@+id/timePicker"
@@ -68,7 +69,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="16dp"
-                android:timePickerMode="spinner" />
+                android:theme="@style/TimePickerTheme"
+                android:timePickerMode="spinner"/>
 
             <View
                 android:layout_width="match_parent"
@@ -115,6 +117,7 @@
                 android:backgroundTint="#6200EE"
                 android:text="Save Reminder"
                 android:textAllCaps="false"
+                android:textColor="#fcfcfc"
                 android:textSize="16sp"
                 app:cornerRadius="12dp" />
 

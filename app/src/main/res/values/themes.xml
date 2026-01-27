@@ -7,4 +7,15 @@
     </style>
 
     <style name="Theme.BrainByte" parent="Base.Theme.BrainByte" />
+
+    <style name="TimePickerSpinnerTheme" parent="android:Widget.Material.TimePicker">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textColorPrimary">@color/black</item>
+    </style>
+
+    <style name="TimePickerTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:textColorSecondary">@color/black</item>
+    </style>
 </resources>
