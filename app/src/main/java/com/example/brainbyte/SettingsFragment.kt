@@ -1,11 +1,14 @@
 package com.example.brainbyte
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.Fragment
 
 class SettingsFragment : Fragment() {
@@ -21,6 +24,22 @@ class SettingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initializeLabels(view)
+
+        val notificationSwitch = view.findViewById<SwitchCompat>(R.id.pushNotificationSwitch)
+        val preference = requireContext().getSharedPreferences("brainbytes_preference",Context.MODE_PRIVATE)
+
+        notificationSwitch.isChecked = preference.getBoolean("notifications_on", false)
+
+
+        notificationSwitch.setOnCheckedChangeListener { _, isChecked ->
+            preference.edit().putBoolean("notifications_on",isChecked).apply()
+            if (isChecked){
+                Toast.makeText(context, "Push Notifications Enabled!", Toast.LENGTH_SHORT).show()
+            }else{
+//                cancelExistingAlarm()
+            }
+
+        }
     }
 
     private fun initializeLabels(view: View) {

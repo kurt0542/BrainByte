@@ -61,6 +61,14 @@ class ReminderFragment : Fragment() {
         }
 
         btnSaveReminder.setOnClickListener {
+            val preference = requireContext().getSharedPreferences("brainbytes_preference", Context.MODE_PRIVATE)
+            val notificationsEnabled = preference.getBoolean("notifications_on", false)
+
+            if (!notificationsEnabled) {
+                Toast.makeText(requireContext(), "Please enable Push Notifications in Settings first", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 if (ContextCompat.checkSelfPermission(
                         requireContext(),

@@ -14,6 +14,13 @@ const val messageExtra = "messageExtra"
 
 class Notification : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
+        val preference = context.getSharedPreferences("brainbytes_preference", Context.MODE_PRIVATE)
+        val notificationsEnabled = preference.getBoolean("notifications_on", false)
+
+        if (!notificationsEnabled) {
+            return
+        }
+
         val title = intent.getStringExtra(titleExtra) ?: "Reminder"
         val message = intent.getStringExtra(messageExtra) ?: "Time to study!"
 
