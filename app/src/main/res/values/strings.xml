@@ -11,4 +11,16 @@
     <string name="nav_profile">Settings</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Import Fragment -->
+    <string name="import_header_title">Import from Image</string>
+    <string name="import_image_preview">Image preview</string>
+    <string name="import_image_preview_hint">Select or capture an image</string>
+    <string name="import_select_from_gallery">Select from gallery</string>
+    <string name="import_take_picture">Take a picture</string>
+    <string name="import_recognized_text">Recognized Text</string>
+    <string name="import_recognized_text_hint">Recognized text will appear here…\n\nYou can also type or paste your notes directly.</string>
+    <string name="import_continue">Continue</string>
+    <string name="import_image_content_description">Selected image preview</string>
+    <string name="import_placeholder_icon">Add image icon</string>
 </resources>
