@@ -23,4 +23,12 @@
     <string name="import_continue">Continue</string>
     <string name="import_image_content_description">Selected image preview</string>
     <string name="import_placeholder_icon">Add image icon</string>
+
+    <!-- Import Fragment 2 -->
+    <string name="import_flashcard_title">Import flashcard</string>
+    <string name="existing_decks_title">Existing Decks</string>
+    <string name="view_all_text">View All</string>
+    <string name="create_new_deck_button">Create a new Deck</string>
+    <string name="deck_card_count_description">Number of cards in the deck</string>
+    <string name="deck_last_updated_description">Last updated time of the deck</string>
 </resources>

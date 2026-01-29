@@ -35,8 +35,6 @@ class SettingsFragment : Fragment() {
             preference.edit().putBoolean("notifications_on",isChecked).apply()
             if (isChecked){
                 Toast.makeText(context, "Push Notifications Enabled!", Toast.LENGTH_SHORT).show()
-            }else{
-//                cancelExistingAlarm()
             }
 
         }

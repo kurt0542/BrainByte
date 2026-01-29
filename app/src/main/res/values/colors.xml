@@ -8,4 +8,10 @@
     <color name="switch_thumb_off">#BDBDBD</color>
     <color name="switch_track_on">#9575CD</color>
     <color name="switch_track_off">#E0E0E0</color>
+
+    <color name="purple_primary">#6200EE</color>
+    <color name="purple_light">#EDE7F6</color>
+    <color name="grey_text">#888888</color>
+    <color name="black_text">#000000</color>
+    <color name="light_grey_background">#F5F5F5</color>
 </resources>
