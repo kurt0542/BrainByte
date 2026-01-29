@@ -1,14 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/light_grey_background"
     tools:context=".CardsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:padding="16dp">
 
-</FrameLayout>
+        <!-- Flashcards Section Header -->
+        <TextView
+            android:id="@+id/flashcards_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/flashcards_title"
+            android:textColor="@color/black_text"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="16dp"/>
+
+        <TextView
+            android:id="@+id/flashcards_view_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/view_all_text"
+            android:textColor="@color/purple_primary"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/flashcards_title"
+            app:layout_constraintBottom_toBottomOf="@id/flashcards_title"/>
+
+        <!-- Flashcards RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/flashcards_recycler_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/flashcards_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp"
+            tools:listitem="@layout/deck_item"
+            tools:itemCount="3"/>
+
+        <!-- Create New Flashcard Button -->
+        <Button
+            android:id="@+id/create_flashcard_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/create_new_flashcard_button"
+            android:backgroundTint="@color/purple_primary"
+            android:textColor="@android:color/white"
+            android:padding="16dp"
+            app:layout_constraintTop_toBottomOf="@id/flashcards_recycler_view"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="24dp"/>
+
+        <!-- Recently Viewed Section Header -->
+        <TextView
+            android:id="@+id/recently_viewed_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/recently_viewed_title"
+            android:textColor="@color/black_text"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/create_flashcard_btn"
+            android:layout_marginTop="24dp"/>
+
+        <TextView
+            android:id="@+id/recently_viewed_view_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/view_all_text"
+            android:textColor="@color/purple_primary"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/recently_viewed_title"
+            app:layout_constraintBottom_toBottomOf="@id/recently_viewed_title"/>
+
+        <!-- Recently Viewed RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recently_viewed_recycler_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/recently_viewed_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:listitem="@layout/deck_item"
+            tools:itemCount="3"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

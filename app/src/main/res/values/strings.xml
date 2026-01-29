@@ -31,4 +31,9 @@
     <string name="create_new_deck_button">Create a new Deck</string>
     <string name="deck_card_count_description">Number of cards in the deck</string>
     <string name="deck_last_updated_description">Last updated time of the deck</string>
+
+    <!-- Cards Fragment -->
+    <string name="flashcards_title">Flashcards</string>
+    <string name="create_new_flashcard_button">Create new flashcard</string>
+    <string name="recently_viewed_title">Recently viewed</string>
 </resources>
