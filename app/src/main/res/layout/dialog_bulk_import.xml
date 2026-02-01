@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/bulk_import_title"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/purple_primary"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/bulk_import_description"
+            android:textSize="14sp"
+            android:textColor="@color/grey_text"
+            android:gravity="center"/>
+
+        <!-- Separator Selection -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/separator_label"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/black_text"/>
+
+        <RadioGroup
+            android:id="@+id/separator_radio_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical"
+            android:theme="@style/Theme.MaterialComponents.Light">
+
+            <RadioButton
+                android:id="@+id/radio_dash"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="@string/separator_dash"
+                android:textSize="15sp"
+                android:textColor="#212121"
+                android:buttonTint="#6200EE"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:checked="true"/>
+
+            <RadioButton
+                android:id="@+id/radio_colon"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="@string/separator_colon"
+                android:textSize="15sp"
+                android:textColor="#212121"
+                android:buttonTint="#6200EE"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+
+            <RadioButton
+                android:id="@+id/radio_equals"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="@string/separator_equals"
+                android:textSize="15sp"
+                android:textColor="#212121"
+                android:buttonTint="#6200EE"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+
+            <RadioButton
+                android:id="@+id/radio_custom"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="@string/separator_custom"
+                android:textSize="15sp"
+                android:textColor="#212121"
+                android:buttonTint="#6200EE"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"/>
+
+        </RadioGroup>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/custom_separator_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/custom_separator_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/custom_separator_hint"
+                android:inputType="text"
+                android:textColor="@color/black_text"
+                android:maxLength="5"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/bulk_text_label"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/black_text"/>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@color/white"
+            app:strokeColor="#E0E0E0"
+            app:strokeWidth="1dp">
+
+            <EditText
+                android:id="@+id/bulk_text_input"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:padding="12dp"
+                android:hint="@string/bulk_text_hint"
+                android:textColor="@color/black_text"
+                android:textColorHint="#9E9E9E"
+                android:textSize="14sp"
+                android:background="@android:color/transparent"
+                android:gravity="top|start"
+                android:inputType="textMultiLine"
+                android:scrollbars="vertical"
+                android:autofillHints="none"/>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:id="@+id/preview_count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/cards_detected_zero"
+            android:textSize="12sp"
+            android:textColor="@color/grey_text"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="16dp"
+            android:orientation="horizontal"
+            android:gravity="end">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel"
+                android:textColor="@color/grey_text"
+                style="@style/Widget.MaterialComponents.Button.TextButton"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_import"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/import_cards"
+                android:textColor="@color/white"
+                app:backgroundTint="@color/purple_primary"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>
