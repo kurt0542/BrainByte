@@ -36,4 +36,26 @@
     <string name="flashcards_title">Flashcards</string>
     <string name="create_new_flashcard_button">Create new flashcard</string>
     <string name="recently_viewed_title">Recently viewed</string>
+
+    <!-- Import Fragment 3 - Add Flashcards -->
+    <string name="add_flashcard_title">Add Flashcards</string>
+    <string name="selected_deck_placeholder">Selected Deck</string>
+    <string name="change_deck">Change</string>
+    <string name="card_counter_placeholder">Card 1</string>
+    <string name="card_counter_format">Card %d</string>
+    <string name="deck_name_label">Deck Name</string>
+    <string name="deck_name_hint">Enter a name for this deck…</string>
+    <string name="front_of_card">Front of Card</string>
+    <string name="back_of_card">Back of Card</string>
+    <string name="front_card_hint">Enter the question or term…</string>
+    <string name="back_card_hint">Enter the answer or definition…</string>
+    <string name="preview_label">Preview</string>
+    <string name="preview_front_placeholder">Question will appear here</string>
+    <string name="preview_back_placeholder">Answer will appear here</string>
+    <string name="front_side">Front</string>
+    <string name="back_side">Back</string>
+    <string name="tap_to_flip">Tap card to flip</string>
+    <string name="add_another_card">Add Another</string>
+    <string name="save_card">Save Card</string>
+    <string name="finish_import">Finish Import</string>
 </resources>
