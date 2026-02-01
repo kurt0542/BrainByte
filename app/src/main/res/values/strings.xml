@@ -58,4 +58,24 @@
     <string name="add_another_card">Add Another</string>
     <string name="save_card">Save Card</string>
     <string name="finish_import">Finish Import</string>
+    <string name="bulk_import">Bulk Import</string>
+
+    <!-- Bulk Import Dialog -->
+    <string name="bulk_import_title">Bulk Import</string>
+    <string name="bulk_import_description">Import multiple flashcards at once.\nEach line should contain a term and definition.</string>
+    <string name="separator_label">Term-Definition Separator</string>
+    <string name="separator_dash">Dash ( - )</string>
+    <string name="separator_colon">Colon ( : )</string>
+    <string name="separator_equals">Equals ( = )</string>
+    <string name="separator_tab">Tab</string>
+    <string name="separator_custom">Custom</string>
+    <string name="custom_separator_hint">Enter separator</string>
+    <string name="bulk_text_label">Paste or type your terms</string>
+    <string name="bulk_text_hint">Example:\nPhotosynthesis - Process by which plants make food\nMitosis - Cell division process\nDNA - Deoxyribonucleic acid</string>
+    <string name="cards_detected_zero">0 cards detected</string>
+    <string name="cards_detected_format">%d card(s) detected</string>
+    <string name="cancel">Cancel</string>
+    <string name="import_cards">Import Cards</string>
+    <string name="bulk_import_success">%d cards imported successfully!</string>
+    <string name="bulk_import_error">No valid cards found. Check your format.</string>
 </resources>
