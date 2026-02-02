@@ -45,6 +45,11 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.fragment)
+
+    implementation(libs.mlkit.document.scanner)
+    implementation(libs.mlkit.text.recognition)
+    implementation(libs.play.services.mlkit.text.recognition)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
