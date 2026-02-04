@@ -10,10 +10,10 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:paddingTop="16dp"
         android:paddingHorizontal="16dp"
-        android:paddingBottom="80dp"
+        android:paddingBottom="100dp"
         android:background="@color/white">
 
         <TextView
@@ -63,7 +63,7 @@
         <FrameLayout
             android:id="@+id/imageContainer"
             android:layout_width="0dp"
-            android:layout_height="300dp"
+            android:layout_height="250dp"
             android:layout_marginTop="16dp"
             android:visibility="gone"
             android:background="@drawable/rounded_border"
@@ -164,30 +164,49 @@
 
         </com.google.android.material.button.MaterialButtonToggleGroup>
 
+        <!-- Selected Text Preview Card -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/selectedTextCard"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            app:cardBackgroundColor="#F5F5F5"
+            app:cardBackgroundColor="#FAFAFA"
             app:cardCornerRadius="12dp"
-            app:cardElevation="0dp"
+            app:cardElevation="2dp"
             app:strokeColor="#E0E0E0"
             app:strokeWidth="1dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/selectionModeGroup">
 
-            <TextView
-                android:id="@+id/selectedTextPreview"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="12dp"
-                android:text="No text selected"
-                android:textColor="#424242"
-                android:textSize="14sp"
-                android:minHeight="100dp"
-                android:gravity="center_vertical" />
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Selected Text"
+                    android:textSize="12sp"
+                    android:textColor="#9E9E9E"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="4dp" />
+
+                <TextView
+                    android:id="@+id/selectedTextPreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="No text selected"
+                    android:textColor="#424242"
+                    android:textSize="14sp"
+                    android:minHeight="60dp"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/rounded_border"
+                    android:padding="8dp" />
+
+            </LinearLayout>
 
         </com.google.android.material.card.MaterialCardView>
 
@@ -195,7 +214,7 @@
             android:id="@+id/selectionButtonsRow"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="8dp"
             android:orientation="horizontal"
             android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
@@ -206,14 +225,14 @@
                 android:id="@+id/btnClearSelection"
                 style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="36dp"
                 android:layout_marginEnd="8dp"
                 android:text="Clear"
                 android:textAllCaps="false"
                 android:textSize="12sp"
                 android:textColor="#616161"
                 android:backgroundTint="@color/white"
-                app:cornerRadius="20dp"
+                app:cornerRadius="18dp"
                 app:strokeColor="#BDBDBD"
                 app:strokeWidth="1dp" />
 
@@ -221,13 +240,13 @@
                 android:id="@+id/btnSelectAll"
                 style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="36dp"
                 android:text="Select All"
                 android:textAllCaps="false"
                 android:textSize="12sp"
                 android:textColor="#616161"
                 android:backgroundTint="@color/white"
-                app:cornerRadius="20dp"
+                app:cornerRadius="18dp"
                 app:strokeColor="#BDBDBD"
                 app:strokeWidth="1dp" />
 
@@ -250,48 +269,315 @@
                 android:layout_height="44dp"
                 android:layout_weight="1"
                 android:layout_marginEnd="8dp"
-                android:text="Use as Term"
+                android:text="Add to Term"
                 android:textAllCaps="false"
                 android:textSize="13sp"
                 android:textColor="#4CAF50"
                 android:backgroundTint="@color/white"
                 app:cornerRadius="22dp"
                 app:strokeColor="#4CAF50"
-                app:strokeWidth="2dp" />
+                app:strokeWidth="2dp"
+                app:icon="@android:drawable/ic_input_add"
+                app:iconSize="16dp"
+                app:iconTint="#4CAF50" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnUseAsDefinition"
                 android:layout_width="0dp"
                 android:layout_height="44dp"
                 android:layout_weight="1"
-                android:text="Use as Definition"
+                android:text="Add to Definition"
                 android:textAllCaps="false"
                 android:textSize="13sp"
                 android:textColor="#2196F3"
                 android:backgroundTint="@color/white"
                 app:cornerRadius="22dp"
                 app:strokeColor="#2196F3"
-                app:strokeWidth="2dp" />
+                app:strokeWidth="2dp"
+                app:icon="@android:drawable/ic_input_add"
+                app:iconSize="16dp"
+                app:iconTint="#2196F3" />
 
         </LinearLayout>
 
+        <!-- Divider -->
+        <View
+            android:id="@+id/divider1"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:background="#E0E0E0"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/assignmentButtonsRow" />
+
+        <!-- Current Entry Section -->
+        <TextView
+            android:id="@+id/currentEntryLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Current Flashcard"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/design_default_color_primary_dark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider1" />
+
+        <!-- Term Input Field -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/termInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="Term"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxStrokeColor="#4CAF50"
+            app:hintTextColor="#4CAF50"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/currentEntryLabel">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/termEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:minLines="2"
+                android:maxLines="4"
+                android:textColor="#424242"
+                android:textSize="14sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Definition Input Field -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/definitionInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="Definition"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxStrokeColor="#2196F3"
+            app:hintTextColor="#2196F3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/termInputLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/definitionEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:minLines="2"
+                android:maxLines="6"
+                android:textColor="#424242"
+                android:textSize="14sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Add to List & Clear Buttons -->
+        <LinearLayout
+            android:id="@+id/entryButtonsRow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/definitionInputLayout">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnClearEntry"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:text="Clear Entry"
+                android:textAllCaps="false"
+                android:textSize="13sp"
+                android:textColor="#F44336"
+                android:backgroundTint="@color/white"
+                app:cornerRadius="22dp"
+                app:strokeColor="#F44336"
+                app:strokeWidth="1dp"
+                app:icon="@android:drawable/ic_menu_close_clear_cancel"
+                app:iconSize="16dp"
+                app:iconTint="#F44336" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAddToList"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                android:text="Add to List"
+                android:textAllCaps="false"
+                android:textSize="13sp"
+                android:textColor="@color/white"
+                app:backgroundTint="#6200EE"
+                app:cornerRadius="22dp"
+                app:icon="@android:drawable/ic_input_add"
+                app:iconSize="18dp"
+                app:iconTint="@color/white" />
+
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:background="#E0E0E0"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/entryButtonsRow" />
+
+        <!-- Flashcard List Header -->
+        <LinearLayout
+            android:id="@+id/flashcardListHeader"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider2">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Flashcard List"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/design_default_color_primary_dark" />
+
+            <TextView
+                android:id="@+id/flashcardCountText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 cards"
+                android:textSize="14sp"
+                android:textColor="#757575"
+                android:background="@drawable/rounded_badge_background"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="4dp" />
+
+        </LinearLayout>
+
+        <!-- Empty State for Flashcard List -->
+        <LinearLayout
+            android:id="@+id/emptyStateContainer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="24dp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/flashcardListHeader"
+            tools:visibility="visible">
+
+            <ImageView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:src="@android:drawable/ic_menu_agenda"
+                android:alpha="0.3"
+                android:contentDescription="Empty list" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="No flashcards yet"
+                android:textSize="14sp"
+                android:textColor="#9E9E9E" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Scan a document and add terms to get started"
+                android:textSize="12sp"
+                android:textColor="#BDBDBD"
+                android:textAlignment="center" />
+
+        </LinearLayout>
+
+        <!-- Flashcard List RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/flashcardListRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:nestedScrollingEnabled="false"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/flashcardListHeader"
+            tools:itemCount="3"
+            tools:listitem="@layout/item_scanned_flashcard"
+            tools:visibility="visible" />
+
+        <!-- Clear All Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnClearAll"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_marginTop="12dp"
+            android:text="Clear All"
+            android:textAllCaps="false"
+            android:textSize="12sp"
+            android:textColor="#F44336"
+            android:backgroundTint="@color/white"
+            android:visibility="gone"
+            app:cornerRadius="18dp"
+            app:strokeColor="#F44336"
+            app:strokeWidth="1dp"
+            app:icon="@android:drawable/ic_menu_delete"
+            app:iconSize="14dp"
+            app:iconTint="#F44336"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/flashcardListRecyclerView"
+            tools:visibility="visible" />
+
+        <!-- Continue Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnContinue"
             android:layout_width="0dp"
             android:layout_height="56dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:enabled="false"
-            android:text="Continue"
+            android:text="Continue with 0 Cards"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
             app:backgroundTint="#6200EE"
             app:cornerRadius="28dp"
+            app:icon="@android:drawable/ic_media_play"
+            app:iconGravity="end"
+            app:iconTint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/assignmentButtonsRow" />
+            app:layout_constraintTop_toBottomOf="@id/btnClearAll" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

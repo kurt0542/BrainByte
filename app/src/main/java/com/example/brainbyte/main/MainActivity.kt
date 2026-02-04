@@ -11,10 +11,10 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.example.brainbyte.CardsFragment
 import com.example.brainbyte.HomeFragment
-import com.example.brainbyte.ImportFragment
 import com.example.brainbyte.R
 import com.example.brainbyte.SearchFragment
 import com.example.brainbyte.SettingsFragment
+import com.example.brainbyte.ocr.DocumentScannerFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         centerButton.setOnClickListener {
-            loadFragment(ImportFragment())
+            loadFragment(DocumentScannerFragment())
 
             updateNavColors(null)
         }

@@ -17,10 +17,13 @@ import android.widget.Toast
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.brainbyte.ImportFragment2
 import com.example.brainbyte.R
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
+import com.google.android.material.textfield.TextInputEditText
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.documentscanner.GmsDocumentScanner
 import com.google.mlkit.vision.documentscanner.GmsDocumentScannerOptions
@@ -43,19 +46,25 @@ class DocumentScannerFragment : Fragment() {
     private lateinit var btnScanDocument: MaterialButton
     private lateinit var btnClearSelection: Button
     private lateinit var btnSelectAll: Button
-    private lateinit var btnUseAsterm: Button
+    private lateinit var btnUseAsTerm: Button
     private lateinit var btnUseAsDefinition: Button
     private lateinit var btnContinue: MaterialButton
-
+    private lateinit var termEditText: TextInputEditText
+    private lateinit var definitionEditText: TextInputEditText
+    private lateinit var btnAddToList: MaterialButton
+    private lateinit var btnClearEntry: MaterialButton
+    private lateinit var flashcardListRecyclerView: RecyclerView
+    private lateinit var flashcardCountText: TextView
+    private lateinit var emptyStateContainer: View
+    private lateinit var btnClearAll: MaterialButton
     private lateinit var documentScanner: GmsDocumentScanner
     private val textRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
-
     private var currentBitmap: Bitmap? = null
     private var currentTextResult: Text? = null
-    private var selectedTerm: String = ""
-    private var selectedDefinition: String = ""
     private var allRecognizedText: String = ""
     private var flashcardSuggestions: List<SmartTextExtractor.FlashcardSuggestion> = emptyList()
+    private val flashcardsList = mutableListOf<FlashcardPair>()
+    private lateinit var flashcardAdapter: ScannedFlashcardAdapter
 
     private val scannerLauncher = registerForActivityResult(
         ActivityResultContracts.StartIntentSenderForResult()
@@ -96,9 +105,26 @@ class DocumentScannerFragment : Fragment() {
         btnScanDocument = view.findViewById(R.id.btnScanDocument)
         btnClearSelection = view.findViewById(R.id.btnClearSelection)
         btnSelectAll = view.findViewById(R.id.btnSelectAll)
-        btnUseAsterm = view.findViewById(R.id.btnUseAsTerm)
+        btnUseAsTerm = view.findViewById(R.id.btnUseAsTerm)
         btnUseAsDefinition = view.findViewById(R.id.btnUseAsDefinition)
         btnContinue = view.findViewById(R.id.btnContinue)
+        termEditText = view.findViewById(R.id.termEditText)
+        definitionEditText = view.findViewById(R.id.definitionEditText)
+        btnAddToList = view.findViewById(R.id.btnAddToList)
+        btnClearEntry = view.findViewById(R.id.btnClearEntry)
+        flashcardListRecyclerView = view.findViewById(R.id.flashcardListRecyclerView)
+        flashcardCountText = view.findViewById(R.id.flashcardCountText)
+        emptyStateContainer = view.findViewById(R.id.emptyStateContainer)
+        btnClearAll = view.findViewById(R.id.btnClearAll)
+        flashcardAdapter = ScannedFlashcardAdapter(
+            flashcardsList,
+            onDeleteClick = { position -> deleteFlashcard(position) },
+            onFlashcardChanged = { updateFlashcardCount() }
+        )
+        flashcardListRecyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = flashcardAdapter
+        }
     }
 
     private fun setupDocumentScanner() {
@@ -142,13 +168,18 @@ class DocumentScannerFragment : Fragment() {
             updateSelectedTextPreview(textOverlayView.getSelectedText())
         }
 
-        btnUseAsterm.setOnClickListener {
+        btnUseAsTerm.setOnClickListener {
             val selected = textOverlayView.getSelectedText()
             if (selected.isNotEmpty()) {
-                selectedTerm = selected
+                val currentText = termEditText.text.toString()
+                val newText = if (currentText.isEmpty()) {
+                    selected
+                } else {
+                    "$currentText $selected"
+                }
+                termEditText.setText(newText)
                 textOverlayView.clearSelection()
-                updateUI()
-                Toast.makeText(context, "Term set: ${selectedTerm.take(30)}...", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Added to term", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(context, "Please select text first", Toast.LENGTH_SHORT).show()
             }
@@ -157,13 +188,30 @@ class DocumentScannerFragment : Fragment() {
         btnUseAsDefinition.setOnClickListener {
             val selected = textOverlayView.getSelectedText()
             if (selected.isNotEmpty()) {
-                selectedDefinition = selected
+                val currentText = definitionEditText.text.toString()
+                val newText = if (currentText.isEmpty()) {
+                    selected
+                } else {
+                    "$currentText $selected"
+                }
+                definitionEditText.setText(newText)
                 textOverlayView.clearSelection()
-                updateUI()
-                Toast.makeText(context, "Definition set", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Added to definition", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(context, "Please select text first", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        btnAddToList.setOnClickListener {
+            addFlashcardToList()
+        }
+
+        btnClearEntry.setOnClickListener {
+            clearCurrentEntry()
+        }
+
+        btnClearAll.setOnClickListener {
+            clearAllFlashcards()
         }
 
         btnContinue.setOnClickListener {
@@ -248,12 +296,81 @@ class DocumentScannerFragment : Fragment() {
         imageContainer.visibility = if (hasImage) View.VISIBLE else View.GONE
         selectionModeGroup.visibility = if (hasText) View.VISIBLE else View.GONE
 
-        btnContinue.isEnabled = allRecognizedText.isNotEmpty()
+        updateFlashcardCount()
+    }
 
-        val termStatus = if (selectedTerm.isNotEmpty()) "✓ Term set" else "No term"
-        val defStatus = if (selectedDefinition.isNotEmpty()) "✓ Definition set" else "No definition"
-        btnUseAsterm.text = termStatus
-        btnUseAsDefinition.text = defStatus
+    private fun addFlashcardToList() {
+        val term = termEditText.text.toString().trim()
+        val definition = definitionEditText.text.toString().trim()
+
+        if (term.isEmpty() && definition.isEmpty()) {
+            Toast.makeText(context, "Please add a term or definition", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (term.isEmpty()) {
+            Toast.makeText(context, "Term is empty. Please add a term.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (definition.isEmpty()) {
+            Toast.makeText(context, "Definition is empty. Please add a definition.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        flashcardAdapter.addFlashcard(FlashcardPair(term, definition))
+        clearCurrentEntry()
+        updateFlashcardCount()
+
+        Toast.makeText(context, "Flashcard added!", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun clearCurrentEntry() {
+        termEditText.setText("")
+        definitionEditText.setText("")
+    }
+
+    private fun deleteFlashcard(position: Int) {
+        flashcardAdapter.removeFlashcard(position)
+        updateFlashcardCount()
+        Toast.makeText(context, "Flashcard deleted", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun clearAllFlashcards() {
+        if (flashcardsList.isEmpty()) return
+
+        android.app.AlertDialog.Builder(requireContext())
+            .setTitle("Clear All Flashcards?")
+            .setMessage("This will delete all ${flashcardsList.size} flashcards. This action cannot be undone.")
+            .setPositiveButton("Clear All") { _, _ ->
+                flashcardAdapter.clearAll()
+                updateFlashcardCount()
+                Toast.makeText(context, "All flashcards cleared", Toast.LENGTH_SHORT).show()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun updateFlashcardCount() {
+        val count = flashcardsList.size
+        flashcardCountText.text = "$count card${if (count != 1) "s" else ""}"
+
+        if (count == 0) {
+            emptyStateContainer.visibility = View.VISIBLE
+            flashcardListRecyclerView.visibility = View.GONE
+            btnClearAll.visibility = View.GONE
+        } else {
+            emptyStateContainer.visibility = View.GONE
+            flashcardListRecyclerView.visibility = View.VISIBLE
+            btnClearAll.visibility = View.VISIBLE
+        }
+
+        btnContinue.isEnabled = count > 0
+        btnContinue.text = if (count > 0) {
+            "Continue with $count Card${if (count != 1) "s" else ""}"
+        } else {
+            "Add flashcards to continue"
+        }
     }
 
     private fun showLoading(show: Boolean) {
@@ -262,12 +379,15 @@ class DocumentScannerFragment : Fragment() {
     }
 
     private fun navigateToNextScreen() {
-        val textToPass = if (flashcardSuggestions.isNotEmpty()) {
-            flashcardSuggestions.joinToString("\n\n") {
-                "${it.term}: ${it.definition}"
-            }
-        } else {
-            allRecognizedText
+        if (flashcardsList.isEmpty()) {
+            Toast.makeText(context, "Please add at least one flashcard", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val finalFlashcards = flashcardAdapter.getFlashcards()
+
+        val textToPass = finalFlashcards.joinToString("\n\n") {
+            "${it.term}: ${it.definition}"
         }
 
         val fragment = ImportFragment2.newInstance(textToPass)

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp"
+    app:strokeColor="#E0E0E0"
+    app:strokeWidth="1dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp">
+
+        <TextView
+            android:id="@+id/cardNumberBadge"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:gravity="center"
+            android:text="1"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:background="@drawable/circle_badge_background"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="1" />
+
+        <ImageButton
+            android:id="@+id/btnDeleteCard"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:contentDescription="Delete flashcard"
+            android:padding="4dp"
+            app:tint="#F44336"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/termLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="8dp"
+            android:text="Term"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:textColor="#4CAF50"
+            android:textAllCaps="true"
+            android:letterSpacing="0.05"
+            app:layout_constraintStart_toEndOf="@id/cardNumberBadge"
+            app:layout_constraintEnd_toStartOf="@id/btnDeleteCard"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/itemTermInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="4dp"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusBottomEnd="8dp"
+            app:boxCornerRadiusBottomStart="8dp"
+            app:boxCornerRadiusTopEnd="8dp"
+            app:boxCornerRadiusTopStart="8dp"
+            app:boxStrokeColor="#4CAF50"
+            app:boxStrokeWidth="1dp"
+            app:boxBackgroundColor="@android:color/transparent"
+            app:hintEnabled="false"
+            app:layout_constraintStart_toEndOf="@id/cardNumberBadge"
+            app:layout_constraintEnd_toStartOf="@id/btnDeleteCard"
+            app:layout_constraintTop_toBottomOf="@id/termLabel">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/itemTermEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:minLines="1"
+                android:maxLines="3"
+                android:textColor="#424242"
+                android:textSize="14sp"
+                android:padding="10dp"
+                tools:text="Example term" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/definitionLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="12dp"
+            android:text="Definition"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:textColor="#2196F3"
+            android:textAllCaps="true"
+            android:letterSpacing="0.05"
+            app:layout_constraintStart_toEndOf="@id/cardNumberBadge"
+            app:layout_constraintEnd_toStartOf="@id/btnDeleteCard"
+            app:layout_constraintTop_toBottomOf="@id/itemTermInputLayout" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/itemDefinitionInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="4dp"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusBottomEnd="8dp"
+            app:boxCornerRadiusBottomStart="8dp"
+            app:boxCornerRadiusTopEnd="8dp"
+            app:boxCornerRadiusTopStart="8dp"
+            app:boxStrokeColor="#2196F3"
+            app:boxStrokeWidth="1dp"
+            app:boxBackgroundColor="@android:color/transparent"
+            app:hintEnabled="false"
+            app:layout_constraintStart_toEndOf="@id/cardNumberBadge"
+            app:layout_constraintEnd_toStartOf="@id/btnDeleteCard"
+            app:layout_constraintTop_toBottomOf="@id/definitionLabel"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/itemDefinitionEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:minLines="1"
+                android:maxLines="5"
+                android:textColor="#424242"
+                android:textSize="14sp"
+                android:padding="10dp"
+                tools:text="Example definition that can span multiple lines to show how it looks" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
