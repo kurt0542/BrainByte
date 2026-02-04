@@ -288,7 +288,7 @@
                 android:layout_weight="1"
                 android:text="Add to Definition"
                 android:textAllCaps="false"
-                android:textSize="13sp"
+                android:textSize="12sp"
                 android:textColor="#2196F3"
                 android:backgroundTint="@color/white"
                 app:cornerRadius="22dp"
@@ -558,6 +558,13 @@
             app:layout_constraintTop_toBottomOf="@id/flashcardListRecyclerView"
             tools:visibility="visible" />
 
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/flashcardSectionBarrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="emptyStateContainer,btnClearAll" />
+
         <!-- Continue Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnContinue"
@@ -577,7 +584,7 @@
             app:iconTint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btnClearAll" />
+            app:layout_constraintTop_toBottomOf="@id/flashcardSectionBarrier" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
