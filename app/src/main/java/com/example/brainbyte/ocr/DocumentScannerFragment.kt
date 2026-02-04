@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -36,7 +35,7 @@ import java.io.IOException
 
 class DocumentScannerFragment : Fragment() {
 
-    private lateinit var imageContainer: FrameLayout
+    private lateinit var imageContainer: ZoomableFrameLayout
     private lateinit var scannedImageView: ImageView
     private lateinit var textOverlayView: TextOverlayView
     private lateinit var progressBar: ProgressBar
@@ -145,10 +144,15 @@ class DocumentScannerFragment : Fragment() {
 
         selectionModeGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if (isChecked) {
+                imageContainer.setSelectionModeEnabled(true)
                 when (checkedId) {
                     R.id.btnWordMode -> textOverlayView.selectionMode = TextOverlayView.SelectionMode.WORD
                     R.id.btnLineMode -> textOverlayView.selectionMode = TextOverlayView.SelectionMode.LINE
                     R.id.btnBlockMode -> textOverlayView.selectionMode = TextOverlayView.SelectionMode.BLOCK
+                }
+            } else {
+                if (selectionModeGroup.checkedButtonId == View.NO_ID) {
+                    imageContainer.setSelectionModeEnabled(false)
                 }
             }
         }
@@ -233,6 +237,9 @@ class DocumentScannerFragment : Fragment() {
         showLoading(true)
         instructionText.text = "Processing image..."
 
+        imageContainer.resetZoom()
+        imageContainer.setSelectionModeEnabled(false)
+
         try {
             val inputStream = requireContext().contentResolver.openInputStream(imageUri)
             currentBitmap = BitmapFactory.decodeStream(inputStream)
@@ -272,6 +279,7 @@ class DocumentScannerFragment : Fragment() {
 
                 showLoading(false)
                 instructionText.text = "Tap or swipe to select text"
+
                 updateUI()
             }
             .addOnFailureListener { e ->

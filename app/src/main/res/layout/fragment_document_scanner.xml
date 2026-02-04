@@ -60,7 +60,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/headerSubtitle" />
 
-        <FrameLayout
+        <com.example.brainbyte.ocr.ZoomableFrameLayout
             android:id="@+id/imageContainer"
             android:layout_width="0dp"
             android:layout_height="250dp"
@@ -68,6 +68,7 @@
             android:visibility="gone"
             android:background="@drawable/rounded_border"
             android:clipToOutline="true"
+            android:clipChildren="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/btnScanDocument"
@@ -94,7 +95,7 @@
                 android:visibility="gone"
                 android:indeterminateTint="#6200EE" />
 
-        </FrameLayout>
+        </com.example.brainbyte.ocr.ZoomableFrameLayout>
 
         <TextView
             android:id="@+id/instructionText"
@@ -115,9 +116,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:visibility="gone"
-            app:checkedButton="@id/btnWordMode"
             app:singleSelection="true"
-            app:selectionRequired="true"
+            app:selectionRequired="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/instructionText"

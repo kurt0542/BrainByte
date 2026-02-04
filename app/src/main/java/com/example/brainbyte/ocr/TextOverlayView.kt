@@ -242,7 +242,7 @@ class TextOverlayView @JvmOverloads constructor(
                 val dx = Math.abs(event.x - swipeStartX)
                 val dy = Math.abs(event.y - swipeStartY)
 
-                if (dx > 20 || dy > 20) {
+                if (dx > 8 || dy > 8) {
                     isSwipeSelecting = true
                 }
 
