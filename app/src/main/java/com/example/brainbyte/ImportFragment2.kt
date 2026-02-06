@@ -7,14 +7,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.brainbyte.data.BrainByteDatabase
+import com.example.brainbyte.data.repository.FlashcardRepository
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class ImportFragment2 : Fragment() {
 
     private lateinit var decksRecyclerView: RecyclerView
     private lateinit var createBtn: Button
     private lateinit var viewAllText: TextView
+    private lateinit var repository: FlashcardRepository
+    private lateinit var deckAdapter: DeckSelectionAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,9 +33,16 @@ class ImportFragment2 : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initDatabase()
         initViews(view)
         setupRecyclerView()
         setupClickListeners()
+        loadDecks()
+    }
+
+    private fun initDatabase() {
+        val database = BrainByteDatabase.getDatabase(requireContext())
+        repository = FlashcardRepository(database.deckDao(), database.flashcardDao())
     }
 
     private fun initViews(view: View) {
@@ -38,7 +52,21 @@ class ImportFragment2 : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        decksRecyclerView.layoutManager = LinearLayoutManager(context)
+        deckAdapter = DeckSelectionAdapter(
+            onDeckClick = { deck -> navigateToAddFlashcards(deck.name, deck.id) }
+        )
+        decksRecyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = deckAdapter
+        }
+    }
+
+    private fun loadDecks() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repository.getAllDecks().collectLatest { decks ->
+                deckAdapter.submitList(decks)
+            }
+        }
     }
 
     private fun setupClickListeners() {
@@ -50,7 +78,7 @@ class ImportFragment2 : Fragment() {
         }
     }
 
-    private fun navigateToAddFlashcards(deckName: String) {
+    private fun navigateToAddFlashcards(deckName: String, deckId: Long? = null) {
         val recognizedText = arguments?.getString("recognizedText")
 
         val fragment = ImportFragment3.newInstance(

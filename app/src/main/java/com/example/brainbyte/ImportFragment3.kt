@@ -8,11 +8,15 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.brainbyte.data.BrainByteDatabase
+import com.example.brainbyte.data.repository.FlashcardRepository
 import com.example.brainbyte.ocr.FlashcardPair
 import com.example.brainbyte.ocr.ScannedFlashcardAdapter
 import com.google.android.material.button.MaterialButton
+import kotlinx.coroutines.launch
 
 class ImportFragment3 : Fragment() {
 
@@ -26,6 +30,7 @@ class ImportFragment3 : Fragment() {
 
     private val flashcardsList = mutableListOf<FlashcardPair>()
     private lateinit var flashcardAdapter: ScannedFlashcardAdapter
+    private lateinit var repository: FlashcardRepository
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,12 +41,18 @@ class ImportFragment3 : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initDatabase()
         initViews(view)
         setupRecyclerView()
         setupTextWatchers()
         setupClickListeners()
         loadArguments()
         updateCardCounter()
+    }
+
+    private fun initDatabase() {
+        val database = BrainByteDatabase.getDatabase(requireContext())
+        repository = FlashcardRepository(database.deckDao(), database.flashcardDao())
     }
 
     private fun initViews(view: View) {
@@ -117,8 +128,23 @@ class ImportFragment3 : Fragment() {
         if (flashcardsList.isNotEmpty()) {
             val deckName = deckNameInput.text.toString().trim()
             val finalFlashcards = flashcardAdapter.getFlashcards()
-            showToast("Deck \"$deckName\" with ${finalFlashcards.size} card(s) created!")
-            parentFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+
+            btnFinish.isEnabled = false
+            btnFinish.text = "Saving..."
+
+            viewLifecycleOwner.lifecycleScope.launch {
+                try {
+                    val deckId = repository.createDeckWithFlashcards(deckName, finalFlashcards)
+
+                    showToast("Deck \"$deckName\" with ${finalFlashcards.size} card(s) saved!")
+
+                    parentFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                } catch (e: Exception) {
+                    showToast("Failed to save deck: ${e.message}")
+                    btnFinish.isEnabled = true
+                    btnFinish.text = "Finish"
+                }
+            }
         } else {
             showToast("Please add at least one card")
         }
