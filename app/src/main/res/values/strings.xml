@@ -78,4 +78,6 @@
     <string name="import_cards">Import Cards</string>
     <string name="bulk_import_success">%d cards imported successfully!</string>
     <string name="bulk_import_error">No valid cards found. Check your format.</string>
+    <string name="no_flashcards_message">No flashcards imported yet.\nGo back to scan and add flashcards.</string>
+    <string name="cards_count_format">%d Card(s)</string>
 </resources>
