@@ -29,6 +29,11 @@ class StudyFragment : Fragment() {
     private lateinit var tapHint: TextView
     private lateinit var btnPrevious: MaterialButton
     private lateinit var btnNext: MaterialButton
+    private lateinit var btnShuffle: ImageButton
+    private lateinit var completionView: View
+    private lateinit var completionStats: TextView
+    private lateinit var btnStudyAgain: MaterialButton
+    private lateinit var btnFinishDeck: MaterialButton
 
     private lateinit var repository: FlashcardRepository
     private var flashcards: List<Flashcard> = emptyList()
@@ -69,6 +74,11 @@ class StudyFragment : Fragment() {
         tapHint = view.findViewById(R.id.tap_hint)
         btnPrevious = view.findViewById(R.id.btn_previous)
         btnNext = view.findViewById(R.id.btn_next)
+        btnShuffle = view.findViewById(R.id.btn_shuffle)
+        completionView = view.findViewById(R.id.completion_view)
+        completionStats = view.findViewById(R.id.completion_stats)
+        btnStudyAgain = view.findViewById(R.id.btn_study_again)
+        btnFinishDeck = view.findViewById(R.id.btn_finish_deck)
     }
 
     private fun loadArguments() {
@@ -105,6 +115,31 @@ class StudyFragment : Fragment() {
                 // Finished studying
                 showCompletionMessage()
             }
+        }
+
+        btnShuffle.setOnClickListener {
+            flashcards = flashcards.shuffled()
+            currentIndex = 0
+            isShowingTerm = true
+            displayCurrentCard()
+        }
+
+        btnStudyAgain.setOnClickListener {
+            currentIndex = 0
+            isShowingTerm = true
+            
+            completionView.visibility = View.GONE
+            flashcardContainer.visibility = View.VISIBLE
+            btnPrevious.visibility = View.VISIBLE
+            btnNext.visibility = View.VISIBLE
+            progressText.visibility = View.VISIBLE
+            progressBar.visibility = View.VISIBLE
+            
+            displayCurrentCard()
+        }
+
+        btnFinishDeck.setOnClickListener {
+            parentFragmentManager.popBackStack()
         }
     }
 
@@ -174,12 +209,14 @@ class StudyFragment : Fragment() {
     }
 
     private fun showCompletionMessage() {
-        Toast.makeText(
-            context,
-            "Great job! You've completed all ${flashcards.size} cards!",
-            Toast.LENGTH_LONG
-        ).show()
-        parentFragmentManager.popBackStack()
+        flashcardContainer.visibility = View.GONE
+        btnPrevious.visibility = View.GONE
+        btnNext.visibility = View.GONE
+        progressText.visibility = View.GONE
+        progressBar.visibility = View.GONE
+
+        completionStats.text = "You studied ${flashcards.size} cards."
+        completionView.visibility = View.VISIBLE
     }
 
     companion object {

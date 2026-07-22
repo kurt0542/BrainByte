@@ -48,11 +48,11 @@ class SettingsFragment : Fragment() {
         passwordRow.findViewById<TextView>(R.id.rowText).text = "Change Password"
 
         editRow.setOnClickListener {
-            Toast.makeText(context, "Edit profile coming soon", Toast.LENGTH_SHORT).show()
+            EditProfileFragment().show(childFragmentManager, "EditProfileModal")
         }
 
         passwordRow.setOnClickListener {
-            Toast.makeText(context, "Change password coming soon", Toast.LENGTH_SHORT).show()
+            ChangePasswordFragment().show(childFragmentManager, "ChangePasswordModal")
         }
 
         val reminderRow = view.findViewById<View>(R.id.row_reminders)
