@@ -42,7 +42,7 @@ class ImportFragment2 : Fragment() {
 
     private fun initDatabase() {
         val database = BrainByteDatabase.getDatabase(requireContext())
-        repository = FlashcardRepository(database.deckDao(), database.flashcardDao())
+        repository = FlashcardRepository(database)
     }
 
     private fun initViews(view: View) {
@@ -83,6 +83,7 @@ class ImportFragment2 : Fragment() {
 
         val fragment = ImportFragment3.newInstance(
             deckName = deckName,
+            deckId = deckId,
             recognizedText = recognizedText
         )
 

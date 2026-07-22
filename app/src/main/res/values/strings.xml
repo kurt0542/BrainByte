@@ -80,4 +80,12 @@
     <string name="bulk_import_error">No valid cards found. Check your format.</string>
     <string name="no_flashcards_message">No flashcards imported yet.\nGo back to scan and add flashcards.</string>
     <string name="cards_count_format">%d Card(s)</string>
+
+    <!-- Study Fragment -->
+    <string name="back_button">Back</string>
+    <string name="term_label">TERM</string>
+    <string name="definition_label">DEFINITION</string>
+    <string name="previous_button">Previous</string>
+    <string name="next_button">Next</string>
+    <string name="finish_button">Finish</string>
 </resources>

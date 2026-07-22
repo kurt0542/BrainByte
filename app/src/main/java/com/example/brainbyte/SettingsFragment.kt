@@ -47,6 +47,14 @@ class SettingsFragment : Fragment() {
         val passwordRow = view.findViewById<View>(R.id.row_password)
         passwordRow.findViewById<TextView>(R.id.rowText).text = "Change Password"
 
+        editRow.setOnClickListener {
+            Toast.makeText(context, "Edit profile coming soon", Toast.LENGTH_SHORT).show()
+        }
+
+        passwordRow.setOnClickListener {
+            Toast.makeText(context, "Change password coming soon", Toast.LENGTH_SHORT).show()
+        }
+
         val reminderRow = view.findViewById<View>(R.id.row_reminders)
 
         reminderRow.findViewById<TextView>(R.id.rowText).text = "Set reminders"
@@ -54,7 +62,7 @@ class SettingsFragment : Fragment() {
 
         reminderRow.setOnClickListener {
             parentFragmentManager.beginTransaction()
-                .replace(R.id.main, ReminderFragment())
+                .replace(R.id.fragment_container, ReminderFragment())
                 .addToBackStack(null)
                 .commit()
         }

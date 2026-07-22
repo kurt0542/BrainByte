@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment
 import com.example.brainbyte.CardsFragment
 import com.example.brainbyte.HomeFragment
 import com.example.brainbyte.R
-import com.example.brainbyte.SearchFragment
+import com.example.brainbyte.AnalyticsFragment
 import com.example.brainbyte.SettingsFragment
 import com.example.brainbyte.ocr.DocumentScannerFragment
 
@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         navCart.setOnClickListener {
-            loadFragment(SearchFragment())
+            loadFragment(AnalyticsFragment())
             updateNavColors(navCart)
         }
 
@@ -73,6 +73,7 @@ class MainActivity : AppCompatActivity() {
     private fun loadFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
             .commit()
     }
 

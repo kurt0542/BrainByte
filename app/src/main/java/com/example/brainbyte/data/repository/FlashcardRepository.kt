@@ -1,5 +1,7 @@
 package com.example.brainbyte.data.repository
 
+import androidx.room.withTransaction
+import com.example.brainbyte.data.BrainByteDatabase
 import com.example.brainbyte.data.dao.DeckDao
 import com.example.brainbyte.data.dao.FlashcardDao
 import com.example.brainbyte.data.entity.Deck
@@ -8,9 +10,11 @@ import com.example.brainbyte.ocr.FlashcardPair
 import kotlinx.coroutines.flow.Flow
 
 class FlashcardRepository(
-    private val deckDao: DeckDao,
-    private val flashcardDao: FlashcardDao
+    private val database: BrainByteDatabase
 ) {
+    private val deckDao = database.deckDao()
+    private val flashcardDao = database.flashcardDao()
+
     fun getAllDecks(): Flow<List<Deck>> = deckDao.getAllDecks()
 
     suspend fun getAllDecksList(): List<Deck> = deckDao.getAllDecksList()
@@ -49,38 +53,42 @@ class FlashcardRepository(
         deckName: String,
         flashcardPairs: List<FlashcardPair>
     ): Long {
-        val deck = Deck(name = deckName)
-        val deckId = deckDao.insertDeck(deck)
+        return database.withTransaction {
+            val deck = Deck(name = deckName)
+            val deckId = deckDao.insertDeck(deck)
 
-        val flashcards = flashcardPairs.map { pair ->
-            Flashcard(
-                deckId = deckId,
-                term = pair.term,
-                definition = pair.definition
-            )
+            val flashcards = flashcardPairs.map { pair ->
+                Flashcard(
+                    deckId = deckId,
+                    term = pair.term,
+                    definition = pair.definition
+                )
+            }
+            flashcardDao.insertFlashcards(flashcards)
+
+            deckId
         }
-        flashcardDao.insertFlashcards(flashcards)
-
-        return deckId
     }
 
     suspend fun addFlashcardsToDeck(
         deckId: Long,
         flashcardPairs: List<FlashcardPair>
     ): List<Long> {
-        val flashcards = flashcardPairs.map { pair ->
-            Flashcard(
-                deckId = deckId,
-                term = pair.term,
-                definition = pair.definition
-            )
-        }
+        return database.withTransaction {
+            val flashcards = flashcardPairs.map { pair ->
+                Flashcard(
+                    deckId = deckId,
+                    term = pair.term,
+                    definition = pair.definition
+                )
+            }
 
-        deckDao.getDeckById(deckId)?.let { deck ->
-            deckDao.updateDeck(deck.copy(updatedAt = System.currentTimeMillis()))
-        }
+            deckDao.getDeckById(deckId)?.let { deck ->
+                deckDao.updateDeck(deck.copy(updatedAt = System.currentTimeMillis()))
+            }
 
-        return flashcardDao.insertFlashcards(flashcards)
+            flashcardDao.insertFlashcards(flashcards)
+        }
     }
 }
 

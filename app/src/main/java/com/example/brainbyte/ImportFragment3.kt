@@ -31,6 +31,7 @@ class ImportFragment3 : Fragment() {
     private val flashcardsList = mutableListOf<FlashcardPair>()
     private lateinit var flashcardAdapter: ScannedFlashcardAdapter
     private lateinit var repository: FlashcardRepository
+    private var deckId: Long = -1
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,7 +53,7 @@ class ImportFragment3 : Fragment() {
 
     private fun initDatabase() {
         val database = BrainByteDatabase.getDatabase(requireContext())
-        repository = FlashcardRepository(database.deckDao(), database.flashcardDao())
+        repository = FlashcardRepository(database)
     }
 
     private fun initViews(view: View) {
@@ -81,6 +82,12 @@ class ImportFragment3 : Fragment() {
         arguments?.getString("deckName")?.let { name ->
             selectedDeckName.text = name
             deckNameInput.setText(name)
+        }
+        arguments?.getLong("deckId", -1)?.let { id ->
+            if (id != -1L) {
+                deckId = id
+                deckNameInput.visibility = View.GONE
+            }
         }
         arguments?.getString("recognizedText")?.let { text ->
             if (text.isNotEmpty()) {
@@ -123,10 +130,9 @@ class ImportFragment3 : Fragment() {
     }
 
     private fun finishImport() {
-        if (!validateDeckName()) return
+        if (deckId == -1L && !validateDeckName()) return
 
         if (flashcardsList.isNotEmpty()) {
-            val deckName = deckNameInput.text.toString().trim()
             val finalFlashcards = flashcardAdapter.getFlashcards()
 
             btnFinish.isEnabled = false
@@ -134,9 +140,15 @@ class ImportFragment3 : Fragment() {
 
             viewLifecycleOwner.lifecycleScope.launch {
                 try {
-                    val deckId = repository.createDeckWithFlashcards(deckName, finalFlashcards)
-
-                    showToast("Deck \"$deckName\" with ${finalFlashcards.size} card(s) saved!")
+                    if (deckId != -1L) {
+                        repository.addFlashcardsToDeck(deckId, finalFlashcards)
+                        val deckName = selectedDeckName.text.toString()
+                        showToast("Added ${finalFlashcards.size} card(s) to \"$deckName\"!")
+                    } else {
+                        val deckName = deckNameInput.text.toString().trim()
+                        repository.createDeckWithFlashcards(deckName, finalFlashcards)
+                        showToast("Deck \"$deckName\" with ${finalFlashcards.size} card(s) saved!")
+                    }
 
                     parentFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 } catch (e: Exception) {
@@ -179,10 +191,11 @@ class ImportFragment3 : Fragment() {
     }
 
     companion object {
-        fun newInstance(deckName: String? = null, recognizedText: String? = null) =
+        fun newInstance(deckName: String? = null, deckId: Long? = null, recognizedText: String? = null) =
             ImportFragment3().apply {
                 arguments = Bundle().apply {
                     deckName?.let { putString("deckName", it) }
+                    deckId?.let { putLong("deckId", it) }
                     recognizedText?.let { putString("recognizedText", it) }
                 }
             }

@@ -1,59 +1,129 @@
 package com.example.brainbyte
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.brainbyte.data.BrainByteDatabase
+import com.example.brainbyte.data.entity.Deck
+import com.example.brainbyte.data.repository.FlashcardRepository
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [CardsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class CardsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var flashcardsRecyclerView: RecyclerView
+    private lateinit var recentlyViewedRecyclerView: RecyclerView
+    private lateinit var createFlashcardBtn: Button
+    private lateinit var flashcardsViewAll: TextView
+    private lateinit var recentlyViewedViewAll: TextView
+
+    private lateinit var repository: FlashcardRepository
+    private lateinit var deckAdapter: DeckAdapter
+    private lateinit var recentDeckAdapter: DeckAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_cards, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment CardsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            CardsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initDatabase()
+        initViews(view)
+        setupRecyclerViews()
+        setupClickListeners()
+        observeDecks()
+    }
+
+    private fun initDatabase() {
+        val database = BrainByteDatabase.getDatabase(requireContext())
+        repository = FlashcardRepository(database)
+    }
+
+    private fun initViews(view: View) {
+        flashcardsRecyclerView = view.findViewById(R.id.flashcards_recycler_view)
+        recentlyViewedRecyclerView = view.findViewById(R.id.recently_viewed_recycler_view)
+        createFlashcardBtn = view.findViewById(R.id.create_flashcard_btn)
+        flashcardsViewAll = view.findViewById(R.id.flashcards_view_all)
+        recentlyViewedViewAll = view.findViewById(R.id.recently_viewed_view_all)
+    }
+
+    private fun setupRecyclerViews() {
+        // Main decks adapter
+        deckAdapter = DeckAdapter(
+            onDeckClick = { deck -> navigateToStudy(deck) },
+            getCardCount = { deckId -> repository.getFlashcardCountByDeck(deckId) }
+        )
+        flashcardsRecyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = deckAdapter
+        }
+
+        // Recently viewed adapter (same functionality for now)
+        recentDeckAdapter = DeckAdapter(
+            onDeckClick = { deck -> navigateToStudy(deck) },
+            getCardCount = { deckId -> repository.getFlashcardCountByDeck(deckId) }
+        )
+        recentlyViewedRecyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = recentDeckAdapter
+        }
+    }
+
+    private fun setupClickListeners() {
+        createFlashcardBtn.setOnClickListener {
+            // Navigate to import/create flashcard flow
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, ImportFragment2())
+                .addToBackStack(null)
+                .commit()
+        }
+    }
+
+    private fun observeDecks() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repository.getAllDecks().collectLatest { decks ->
+                deckAdapter.submitList(decks)
+
+                // Load card counts for each deck
+                decks.forEach { deck ->
+                    launch {
+                        val count = repository.getFlashcardCountByDeck(deck.id)
+                        deckAdapter.updateCardCount(deck.id, count)
+                    }
+                }
+
+                // For recently viewed, show the 3 most recent
+                val recentDecks = decks.sortedByDescending { it.updatedAt }.take(3)
+                recentDeckAdapter.submitList(recentDecks)
+                recentDecks.forEach { deck ->
+                    launch {
+                        val count = repository.getFlashcardCountByDeck(deck.id)
+                        recentDeckAdapter.updateCardCount(deck.id, count)
+                    }
                 }
             }
+        }
+    }
+
+    private fun navigateToStudy(deck: Deck) {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, StudyFragment.newInstance(deck.id, deck.name))
+            .addToBackStack(null)
+            .commit()
+    }
+
+    companion object {
+        @JvmStatic
+        fun newInstance() = CardsFragment()
     }
 }
