@@ -1,9 +1,17 @@
 package com.example.brainbyte.auth
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.example.brainbyte.R
+import com.example.brainbyte.constants.APPWRITE_PROJECT_ID
+import com.example.brainbyte.constants.APPWRITE_PUBLIC_ENDPOINT
+import com.example.brainbyte.main.MainActivity
+import io.appwrite.Client
+import io.appwrite.services.Account
+import kotlinx.coroutines.launch
 
 class AuthActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,11 +25,24 @@ class AuthActivity : AppCompatActivity() {
                 .add(R.id.fragmentContainerView, LoginFragment())
                 .commit()
         }
+    }
 
-//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-//            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-//            insets
-//        }
+    override fun onResume() {
+        super.onResume()
+        val client = Client(this)
+            .setEndpoint(APPWRITE_PUBLIC_ENDPOINT)
+            .setProject(APPWRITE_PROJECT_ID)
+        val account = Account(client)
+        
+        lifecycleScope.launch {
+            try {
+                account.get()
+                // If this succeeds, the user is logged in
+                startActivity(Intent(this@AuthActivity, MainActivity::class.java))
+                finish()
+            } catch (e: Exception) {
+                // Not logged in, stay on this screen
+            }
+        }
     }
 }

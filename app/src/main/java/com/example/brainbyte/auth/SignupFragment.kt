@@ -6,14 +6,23 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.ScrollView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.lifecycle.lifecycleScope
 import com.example.brainbyte.R
+import com.example.brainbyte.constants.APPWRITE_PROJECT_ID
+import com.example.brainbyte.constants.APPWRITE_PUBLIC_ENDPOINT
 import com.google.android.material.textfield.TextInputEditText
+import io.appwrite.Client
+import io.appwrite.ID
+import io.appwrite.services.Account
+import kotlinx.coroutines.launch
 
 class SignupFragment : Fragment(R.layout.fragment_signup) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -44,6 +53,9 @@ class SignupFragment : Fragment(R.layout.fragment_signup) {
         val email = view.findViewById<TextInputEditText>(R.id.et_email)
         val password = view.findViewById<TextInputEditText>(R.id.et_password)
         val confirmPassword = view.findViewById<TextInputEditText>(R.id.et_confirm_password)
+
+        // Ensure you have a button in your XML layout with this ID (or change it to match)
+        val signupButton = view.findViewById<Button>(R.id.signup_btn)
 
         username.isFocusableInTouchMode = true
         email.isFocusableInTouchMode = true
@@ -126,6 +138,65 @@ class SignupFragment : Fragment(R.layout.fragment_signup) {
                 imm?.hideSoftInputFromWindow(v.windowToken, 0)
                 true
             } else false
+        }
+
+        // --- APPWRITE AUTHENTICATION SETUP ---
+        signupButton.setOnClickListener {
+            val emailText = email.text.toString().trim()
+            val passwordText = password.text.toString().trim()
+            val confirmPasswordText = confirmPassword.text.toString().trim()
+            val nameText = username.text.toString().trim()
+
+            if (passwordText != confirmPasswordText) {
+                Toast.makeText(requireContext(), "Passwords do not match", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Initialize Appwrite Client and Account
+            val client = Client(requireContext())
+                .setEndpoint(APPWRITE_PUBLIC_ENDPOINT)
+                .setProject(APPWRITE_PROJECT_ID)
+            val account = Account(client)
+
+            // Launch Coroutine for network request
+            viewLifecycleOwner.lifecycleScope.launch {
+                try {
+                    val user = account.create(
+                        userId = ID.unique(),
+                        email = emailText,
+                        password = passwordText,
+                        name = nameText
+                    )
+                    Toast.makeText(requireContext(), "Account created successfully!", Toast.LENGTH_SHORT).show()
+
+                    // Navigate to Login after successful registration
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerView, LoginFragment())
+                        .commit()
+
+                } catch (e: Exception) {
+                    Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
+        val signupGoogleBtn = view.findViewById<Button>(R.id.signup_google_btn)
+        signupGoogleBtn.setOnClickListener {
+            val client = Client(requireContext())
+                .setEndpoint(APPWRITE_PUBLIC_ENDPOINT)
+                .setProject(APPWRITE_PROJECT_ID)
+            val account = Account(client)
+
+            viewLifecycleOwner.lifecycleScope.launch {
+                try {
+                    account.createOAuth2Session(
+                        activity = requireActivity(),
+                        provider = io.appwrite.enums.OAuthProvider.GOOGLE
+                    )
+                } catch (e: Exception) {
+                    Toast.makeText(requireContext(), "Google Signup Error: ${e.message}", Toast.LENGTH_LONG).show()
+                }
+            }
         }
     }
 }

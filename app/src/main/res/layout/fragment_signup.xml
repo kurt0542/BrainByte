@@ -181,6 +181,20 @@
             android:text="SIGN UP"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
+            android:textStyle="bold"
+            android:id="@+id/signup_btn"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/signup_google_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/rounded_button_bg"
+            android:backgroundTint="#F2F2F2"
+            android:padding="16dp"
+            android:text="SIGN UP WITH GOOGLE"
+            android:textColor="#333333"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <LinearLayout

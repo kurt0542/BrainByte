@@ -14,7 +14,10 @@ import com.example.brainbyte.HomeFragment
 import com.example.brainbyte.R
 import com.example.brainbyte.AnalyticsFragment
 import com.example.brainbyte.SettingsFragment
+import com.example.brainbyte.constants.APPWRITE_PROJECT_ID
+import com.example.brainbyte.constants.APPWRITE_PUBLIC_ENDPOINT
 import com.example.brainbyte.ocr.DocumentScannerFragment
+import io.appwrite.Client
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,6 +26,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val client = Client(applicationContext)
+            .setEndpoint(APPWRITE_PUBLIC_ENDPOINT)
+            .setProject(APPWRITE_PROJECT_ID)
+
         setContentView(R.layout.activity_main)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
