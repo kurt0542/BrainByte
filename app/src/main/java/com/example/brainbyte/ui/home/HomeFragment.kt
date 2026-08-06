@@ -1,4 +1,4 @@
-package com.example.brainbyte
+package com.example.brainbyte.ui.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,17 +6,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.example.brainbyte.data.BrainByteDatabase
+import androidx.navigation.fragment.findNavController
+import com.example.brainbyte.R
 import com.example.brainbyte.data.entity.Deck
-import com.example.brainbyte.data.repository.FlashcardRepository
-import com.example.brainbyte.ocr.DocumentScannerFragment
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
-import kotlinx.coroutines.flow.collectLatest
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
+
+    private val viewModel: HomeViewModel by viewModels()
 
     private lateinit var tvTotalDecks: TextView
     private lateinit var tvTotalCards: TextView
@@ -28,7 +31,6 @@ class HomeFragment : Fragment() {
     private lateinit var actionScan: MaterialCardView
     private lateinit var actionCreate: MaterialCardView
 
-    private lateinit var repository: FlashcardRepository
     private var mostRecentDeck: Deck? = null
 
     override fun onCreateView(
@@ -40,15 +42,9 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initDatabase()
         initViews(view)
         setupClickListeners()
-        loadData()
-    }
-
-    private fun initDatabase() {
-        val database = BrainByteDatabase.getDatabase(requireContext())
-        repository = FlashcardRepository(database)
+        observeViewModel()
     }
 
     private fun initViews(view: View) {
@@ -65,51 +61,34 @@ class HomeFragment : Fragment() {
 
     private fun setupClickListeners() {
         actionScan.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, DocumentScannerFragment.newInstance())
-                .addToBackStack(null)
-                .commit()
+            findNavController().navigate(R.id.documentScannerFragment)
         }
 
         actionCreate.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, ImportFragment2.newInstance())
-                .addToBackStack(null)
-                .commit()
+            findNavController().navigate(R.id.importFragment2)
         }
 
         btnStudyNow.setOnClickListener {
             mostRecentDeck?.let { deck ->
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, StudyFragment.newInstance(deck.id, deck.name))
-                    .addToBackStack(null)
-                    .commit()
+                val action = HomeFragmentDirections.actionHomeFragmentToStudyFragment(deck.id, deck.name)
+                findNavController().navigate(action)
             }
         }
     }
 
-    private fun loadData() {
+    private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
-            repository.getAllDecks().collectLatest { decks ->
-                tvTotalDecks.text = decks.size.toString()
-                
-                var totalCards = 0
-                for (deck in decks) {
-                    totalCards += repository.getFlashcardCountByDeck(deck.id)
-                }
-                tvTotalCards.text = totalCards.toString()
+            viewModel.uiState.collect { state ->
+                tvTotalDecks.text = state.totalDecks.toString()
+                tvTotalCards.text = state.totalCards.toString()
 
-                if (decks.isNotEmpty()) {
-                    val recentDeck = decks.maxByOrNull { it.updatedAt }
-                    mostRecentDeck = recentDeck
-                    if (recentDeck != null) {
-                        tvRecentDeckName.text = recentDeck.name
-                        val count = repository.getFlashcardCountByDeck(recentDeck.id)
-                        tvRecentDeckCount.text = "$count cards"
-                        
-                        cardContinueStudying.visibility = View.VISIBLE
-                        tvEmptyDecksMsg.visibility = View.GONE
-                    }
+                if (state.recentDeck != null) {
+                    mostRecentDeck = state.recentDeck
+                    tvRecentDeckName.text = state.recentDeck.name
+                    tvRecentDeckCount.text = "${state.recentDeckCardCount} cards"
+                    
+                    cardContinueStudying.visibility = View.VISIBLE
+                    tvEmptyDecksMsg.visibility = View.GONE
                 } else {
                     cardContinueStudying.visibility = View.GONE
                     tvEmptyDecksMsg.visibility = View.VISIBLE
@@ -117,4 +96,5 @@ class HomeFragment : Fragment() {
             }
         }
     }
+
 }

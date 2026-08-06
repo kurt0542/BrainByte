@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.brainbyte.ui.home.HomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_studyFragment"
+            app:destination="@id/studyFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/studyFragment"
+        android:name="com.example.brainbyte.ui.study.StudyFragment"
+        android:label="Study"
+        tools:layout="@layout/fragment_study">
+        <argument
+            android:name="deckId"
+            app:argType="long" />
+        <argument
+            android:name="deckName"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/documentScannerFragment"
+        android:name="com.example.brainbyte.ocr.DocumentScannerFragment"
+        android:label="Scanner"
+        tools:layout="@layout/fragment_document_scanner" />
+
+    <fragment
+        android:id="@+id/importFragment2"
+        android:name="com.example.brainbyte.ui.import_deck.ImportFragment2"
+        android:label="Import Deck"
+        tools:layout="@layout/fragment_import2" />
+
+    <fragment
+        android:id="@+id/cardsFragment"
+        android:name="com.example.brainbyte.ui.study.CardsFragment"
+        android:label="Cards"
+        tools:layout="@layout/fragment_cards" />
+
+    <fragment
+        android:id="@+id/analyticsFragment"
+        android:name="com.example.brainbyte.ui.analytics.AnalyticsFragment"
+        android:label="Analytics"
+        tools:layout="@layout/fragment_analytics" />
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.brainbyte.ui.settings.SettingsFragment"
+        android:label="Settings"
+        tools:layout="@layout/fragment_settings" />
+
+</navigation>

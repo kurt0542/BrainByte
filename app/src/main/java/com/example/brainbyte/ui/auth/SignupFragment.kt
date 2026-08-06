@@ -1,4 +1,4 @@
-package com.example.brainbyte.auth
+package com.example.brainbyte.ui.auth
 
 import android.graphics.Rect
 import android.os.Bundle

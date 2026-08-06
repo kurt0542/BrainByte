@@ -1,4 +1,4 @@
-package com.example.brainbyte.auth
+package com.example.brainbyte.ui.auth
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,11 +8,13 @@ import androidx.lifecycle.lifecycleScope
 import com.example.brainbyte.R
 import com.example.brainbyte.constants.APPWRITE_PROJECT_ID
 import com.example.brainbyte.constants.APPWRITE_PUBLIC_ENDPOINT
-import com.example.brainbyte.main.MainActivity
+import com.example.brainbyte.ui.main.MainActivity
+import dagger.hilt.android.AndroidEntryPoint
 import io.appwrite.Client
 import io.appwrite.services.Account
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class AuthActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

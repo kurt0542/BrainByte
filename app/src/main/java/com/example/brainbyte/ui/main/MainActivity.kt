@@ -1,4 +1,4 @@
-package com.example.brainbyte.main
+package com.example.brainbyte.ui.main
 
 import android.graphics.Color
 import android.os.Bundle
@@ -8,17 +8,15 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.Fragment
-import com.example.brainbyte.CardsFragment
-import com.example.brainbyte.HomeFragment
+import androidx.navigation.findNavController
 import com.example.brainbyte.R
-import com.example.brainbyte.AnalyticsFragment
-import com.example.brainbyte.SettingsFragment
 import com.example.brainbyte.constants.APPWRITE_PROJECT_ID
 import com.example.brainbyte.constants.APPWRITE_PUBLIC_ENDPOINT
-import com.example.brainbyte.ocr.DocumentScannerFragment
+import dagger.hilt.android.AndroidEntryPoint
 import io.appwrite.Client
 
+
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private val selectedColor = Color.parseColor("#5B50E8")
@@ -47,43 +45,35 @@ class MainActivity : AppCompatActivity() {
         val centerButton = findViewById<android.view.View>(R.id.nav_center_button)
 
         if (savedInstanceState == null) {
-            loadFragment(HomeFragment())
             updateNavColors(navHome)
         }
 
         navHome.setOnClickListener {
-            loadFragment(HomeFragment())
+            findNavController(R.id.fragment_container).navigate(R.id.homeFragment)
             updateNavColors(navHome)
         }
 
         navSearch.setOnClickListener {
-            loadFragment(CardsFragment())
+            findNavController(R.id.fragment_container).navigate(R.id.cardsFragment)
             updateNavColors(navSearch)
         }
 
         navCart.setOnClickListener {
-            loadFragment(AnalyticsFragment())
+            findNavController(R.id.fragment_container).navigate(R.id.analyticsFragment)
             updateNavColors(navCart)
         }
 
         navProfile.setOnClickListener {
-            loadFragment(SettingsFragment())
+            findNavController(R.id.fragment_container).navigate(R.id.settingsFragment)
             updateNavColors(navProfile)
         }
 
         centerButton.setOnClickListener {
-            loadFragment(DocumentScannerFragment())
-
+            findNavController(R.id.fragment_container).navigate(R.id.documentScannerFragment)
             updateNavColors(null)
         }
     }
 
-    private fun loadFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .addToBackStack(null)
-            .commit()
-    }
 
     private fun updateNavColors(selectedLayout: LinearLayout?) {
         val navItems = listOf(

@@ -1,4 +1,4 @@
-package com.example.brainbyte.auth
+package com.example.brainbyte.ui.auth
 
 import android.content.Intent
 import android.graphics.Rect
@@ -15,7 +15,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import com.example.brainbyte.R
-import com.example.brainbyte.main.MainActivity
+import com.example.brainbyte.ui.main.MainActivity
 import com.google.android.material.textfield.TextInputEditText
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
