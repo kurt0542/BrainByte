@@ -19,26 +19,26 @@ class FlashcardRepository(
 
     suspend fun getAllDecksList(): List<Deck> = deckDao.getAllDecksList()
 
-    suspend fun getDeckById(id: Long): Deck? = deckDao.getDeckById(id)
+    suspend fun getDeckById(id: String): Deck? = deckDao.getDeckById(id)
 
     suspend fun getDeckByName(name: String): Deck? = deckDao.getDeckByName(name)
 
-    suspend fun insertDeck(deck: Deck): Long = deckDao.insertDeck(deck)
+    suspend fun insertDeck(deck: Deck) = deckDao.insertDeck(deck)
 
     suspend fun updateDeck(deck: Deck) = deckDao.updateDeck(deck)
 
     suspend fun deleteDeck(deck: Deck) = deckDao.deleteDeck(deck)
 
-    fun getFlashcardsByDeckId(deckId: Long): Flow<List<Flashcard>> =
+    fun getFlashcardsByDeckId(deckId: String): Flow<List<Flashcard>> =
         flashcardDao.getFlashcardsByDeckId(deckId)
 
-    suspend fun getFlashcardsByDeckIdList(deckId: Long): List<Flashcard> =
+    suspend fun getFlashcardsByDeckIdList(deckId: String): List<Flashcard> =
         flashcardDao.getFlashcardsByDeckIdList(deckId)
 
-    suspend fun insertFlashcard(flashcard: Flashcard): Long =
+    suspend fun insertFlashcard(flashcard: Flashcard) =
         flashcardDao.insertFlashcard(flashcard)
 
-    suspend fun insertFlashcards(flashcards: List<Flashcard>): List<Long> =
+    suspend fun insertFlashcards(flashcards: List<Flashcard>) =
         flashcardDao.insertFlashcards(flashcards)
 
     suspend fun updateFlashcard(flashcard: Flashcard) =
@@ -47,15 +47,17 @@ class FlashcardRepository(
     suspend fun deleteFlashcard(flashcard: Flashcard) =
         flashcardDao.deleteFlashcard(flashcard)
 
-    suspend fun getFlashcardCountByDeck(deckId: Long): Int =
+    suspend fun getFlashcardCountByDeck(deckId: String): Int =
         flashcardDao.getFlashcardCountByDeck(deckId)
+
     suspend fun createDeckWithFlashcards(
         deckName: String,
         flashcardPairs: List<FlashcardPair>
-    ): Long {
+    ): String {
         return database.withTransaction {
             val deck = Deck(name = deckName)
-            val deckId = deckDao.insertDeck(deck)
+            deckDao.insertDeck(deck)
+            val deckId = deck.id
 
             val flashcards = flashcardPairs.map { pair ->
                 Flashcard(
@@ -71,10 +73,10 @@ class FlashcardRepository(
     }
 
     suspend fun addFlashcardsToDeck(
-        deckId: Long,
+        deckId: String,
         flashcardPairs: List<FlashcardPair>
-    ): List<Long> {
-        return database.withTransaction {
+    ) {
+        database.withTransaction {
             val flashcards = flashcardPairs.map { pair ->
                 Flashcard(
                     deckId = deckId,

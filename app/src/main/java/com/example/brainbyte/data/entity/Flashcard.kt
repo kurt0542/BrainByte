@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import java.util.UUID
 
 @Entity(
     tableName = "flashcards",
@@ -18,11 +19,18 @@ import androidx.room.PrimaryKey
     indices = [Index(value = ["deckId"])]
 )
 data class Flashcard(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
-    val deckId: Long,
+    @PrimaryKey
+    val id: String = UUID.randomUUID().toString(),
+    val deckId: String,
     val term: String,
     val definition: String,
-    val createdAt: Long = System.currentTimeMillis()
+    
+    // Spaced Repetition / Study Fields
+    val easeFactor: Double = 2.5,
+    val interval: Int = 0,
+    val nextReviewDate: Long = System.currentTimeMillis(),
+    
+    val createdAt: Long = System.currentTimeMillis(),
+    val updatedAt: Long = System.currentTimeMillis()
 )
 

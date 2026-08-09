@@ -12,10 +12,10 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface FlashcardDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertFlashcard(flashcard: Flashcard): Long
+    suspend fun insertFlashcard(flashcard: Flashcard)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertFlashcards(flashcards: List<Flashcard>): List<Long>
+    suspend fun insertFlashcards(flashcards: List<Flashcard>)
 
     @Update
     suspend fun updateFlashcard(flashcard: Flashcard)
@@ -24,18 +24,18 @@ interface FlashcardDao {
     suspend fun deleteFlashcard(flashcard: Flashcard)
 
     @Query("SELECT * FROM flashcards WHERE deckId = :deckId ORDER BY createdAt ASC")
-    fun getFlashcardsByDeckId(deckId: Long): Flow<List<Flashcard>>
+    fun getFlashcardsByDeckId(deckId: String): Flow<List<Flashcard>>
 
     @Query("SELECT * FROM flashcards WHERE deckId = :deckId ORDER BY createdAt ASC")
-    suspend fun getFlashcardsByDeckIdList(deckId: Long): List<Flashcard>
+    suspend fun getFlashcardsByDeckIdList(deckId: String): List<Flashcard>
 
     @Query("SELECT * FROM flashcards WHERE id = :flashcardId")
-    suspend fun getFlashcardById(flashcardId: Long): Flashcard?
+    suspend fun getFlashcardById(flashcardId: String): Flashcard?
 
     @Query("SELECT COUNT(*) FROM flashcards WHERE deckId = :deckId")
-    suspend fun getFlashcardCountByDeck(deckId: Long): Int
+    suspend fun getFlashcardCountByDeck(deckId: String): Int
 
     @Query("DELETE FROM flashcards WHERE deckId = :deckId")
-    suspend fun deleteFlashcardsByDeckId(deckId: Long)
+    suspend fun deleteFlashcardsByDeckId(deckId: String)
 }
 

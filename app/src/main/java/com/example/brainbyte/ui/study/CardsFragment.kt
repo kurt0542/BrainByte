@@ -1,4 +1,4 @@
-package com.example.brainbyte
+package com.example.brainbyte.ui.study
 
 import com.example.brainbyte.R
 
@@ -15,6 +15,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.brainbyte.data.BrainByteDatabase
 import com.example.brainbyte.data.entity.Deck
 import com.example.brainbyte.data.repository.FlashcardRepository
+import com.example.brainbyte.ui.deck.DeckAdapter
+import com.example.brainbyte.ui.import_deck.ImportFragment2
+import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -84,10 +87,7 @@ class CardsFragment : Fragment() {
     private fun setupClickListeners() {
         createFlashcardBtn.setOnClickListener {
             // Navigate to import/create flashcard flow
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, ImportFragment2())
-                .addToBackStack(null)
-                .commit()
+            findNavController().navigate(com.example.brainbyte.R.id.importFragment2)
         }
     }
 
@@ -118,10 +118,11 @@ class CardsFragment : Fragment() {
     }
 
     private fun navigateToStudy(deck: Deck) {
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, StudyFragment.newInstance(deck.id, deck.name))
-            .addToBackStack(null)
-            .commit()
+        val bundle = Bundle().apply {
+            putString("deckId", deck.id)
+            putString("deckName", deck.name)
+        }
+        findNavController().navigate(com.example.brainbyte.R.id.studyFragment, bundle)
     }
 
     companion object {

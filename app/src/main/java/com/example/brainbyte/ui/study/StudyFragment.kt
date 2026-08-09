@@ -1,4 +1,4 @@
-package com.example.brainbyte
+package com.example.brainbyte.ui.study
 
 import com.example.brainbyte.R
 
@@ -41,7 +41,7 @@ class StudyFragment : Fragment() {
     private var flashcards: List<Flashcard> = emptyList()
     private var currentIndex = 0
     private var isShowingTerm = true
-    private var deckId: Long = -1
+    private var deckId: String = ""
     private var deckName: String = ""
 
     override fun onCreateView(
@@ -85,7 +85,7 @@ class StudyFragment : Fragment() {
 
     private fun loadArguments() {
         arguments?.let {
-            deckId = it.getLong(ARG_DECK_ID, -1)
+            deckId = it.getString(ARG_DECK_ID, "") ?: ""
             deckName = it.getString(ARG_DECK_NAME, "") ?: ""
         }
         deckTitle.text = deckName
@@ -146,7 +146,7 @@ class StudyFragment : Fragment() {
     }
 
     private fun loadFlashcards() {
-        if (deckId == -1L) {
+        if (deckId.isEmpty()) {
             Toast.makeText(context, "Invalid deck", Toast.LENGTH_SHORT).show()
             parentFragmentManager.popBackStack()
             return
@@ -225,9 +225,9 @@ class StudyFragment : Fragment() {
         private const val ARG_DECK_ID = "deck_id"
         private const val ARG_DECK_NAME = "deck_name"
 
-        fun newInstance(deckId: Long, deckName: String) = StudyFragment().apply {
+        fun newInstance(deckId: String, deckName: String) = StudyFragment().apply {
             arguments = Bundle().apply {
-                putLong(ARG_DECK_ID, deckId)
+                putString(ARG_DECK_ID, deckId)
                 putString(ARG_DECK_NAME, deckName)
             }
         }

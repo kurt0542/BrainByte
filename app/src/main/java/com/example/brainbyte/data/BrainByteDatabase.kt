@@ -6,18 +6,24 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.brainbyte.data.dao.DeckDao
 import com.example.brainbyte.data.dao.FlashcardDao
+import com.example.brainbyte.data.dao.ProfileDao
+import com.example.brainbyte.data.dao.StudySessionDao
 import com.example.brainbyte.data.entity.Deck
 import com.example.brainbyte.data.entity.Flashcard
+import com.example.brainbyte.data.entity.Profile
+import com.example.brainbyte.data.entity.StudySession
 
 @Database(
-    entities = [Deck::class, Flashcard::class],
-    version = 1,
+    entities = [Deck::class, Flashcard::class, Profile::class, StudySession::class],
+    version = 2,
     exportSchema = false
 )
 abstract class BrainByteDatabase : RoomDatabase() {
 
     abstract fun deckDao(): DeckDao
     abstract fun flashcardDao(): FlashcardDao
+    abstract fun profileDao(): ProfileDao
+    abstract fun studySessionDao(): StudySessionDao
 
     companion object {
         @Volatile
@@ -29,7 +35,9 @@ abstract class BrainByteDatabase : RoomDatabase() {
                     context.applicationContext,
                     BrainByteDatabase::class.java,
                     "brainbyte_database"
-                ).build()
+                )
+                .fallbackToDestructiveMigration(true)
+                .build()
                 INSTANCE = instance
                 instance
             }

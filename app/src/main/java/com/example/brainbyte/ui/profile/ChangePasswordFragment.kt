@@ -1,4 +1,4 @@
-package com.example.brainbyte
+package com.example.brainbyte.ui.profile
 
 import com.example.brainbyte.R
 

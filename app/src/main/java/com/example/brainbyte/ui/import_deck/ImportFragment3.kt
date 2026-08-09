@@ -1,6 +1,7 @@
-package com.example.brainbyte
+package com.example.brainbyte.ui.import_deck
 
 import com.example.brainbyte.R
+import com.example.brainbyte.SimpleTextWatcher
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -33,7 +34,7 @@ class ImportFragment3 : Fragment() {
     private val flashcardsList = mutableListOf<FlashcardPair>()
     private lateinit var flashcardAdapter: ScannedFlashcardAdapter
     private lateinit var repository: FlashcardRepository
-    private var deckId: Long = -1
+    private var deckId: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -85,11 +86,9 @@ class ImportFragment3 : Fragment() {
             selectedDeckName.text = name
             deckNameInput.setText(name)
         }
-        arguments?.getLong("deckId", -1)?.let { id ->
-            if (id != -1L) {
-                deckId = id
-                deckNameInput.visibility = View.GONE
-            }
+        arguments?.getString("deckId")?.let { id ->
+            deckId = id
+            deckNameInput.visibility = View.GONE
         }
         arguments?.getString("recognizedText")?.let { text ->
             if (text.isNotEmpty()) {
@@ -132,7 +131,7 @@ class ImportFragment3 : Fragment() {
     }
 
     private fun finishImport() {
-        if (deckId == -1L && !validateDeckName()) return
+        if (deckId == null && !validateDeckName()) return
 
         if (flashcardsList.isNotEmpty()) {
             val finalFlashcards = flashcardAdapter.getFlashcards()
@@ -142,8 +141,8 @@ class ImportFragment3 : Fragment() {
 
             viewLifecycleOwner.lifecycleScope.launch {
                 try {
-                    if (deckId != -1L) {
-                        repository.addFlashcardsToDeck(deckId, finalFlashcards)
+                    if (deckId != null) {
+                        repository.addFlashcardsToDeck(deckId!!, finalFlashcards)
                         val deckName = selectedDeckName.text.toString()
                         showToast("Added ${finalFlashcards.size} card(s) to \"$deckName\"!")
                     } else {
@@ -193,11 +192,11 @@ class ImportFragment3 : Fragment() {
     }
 
     companion object {
-        fun newInstance(deckName: String? = null, deckId: Long? = null, recognizedText: String? = null) =
+        fun newInstance(deckName: String? = null, deckId: String? = null, recognizedText: String? = null) =
             ImportFragment3().apply {
                 arguments = Bundle().apply {
                     deckName?.let { putString("deckName", it) }
-                    deckId?.let { putLong("deckId", it) }
+                    deckId?.let { putString("deckId", it) }
                     recognizedText?.let { putString("recognizedText", it) }
                 }
             }

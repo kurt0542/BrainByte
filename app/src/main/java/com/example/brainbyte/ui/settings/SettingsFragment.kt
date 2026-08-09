@@ -1,6 +1,10 @@
-package com.example.brainbyte
+package com.example.brainbyte.ui.settings
 
 import com.example.brainbyte.R
+import com.example.brainbyte.ui.profile.EditProfileFragment
+import com.example.brainbyte.ui.profile.ChangePasswordFragment
+import com.example.brainbyte.ui.reminder.ReminderFragment
+import androidx.navigation.fragment.findNavController
 
 import android.content.Context
 import android.os.Bundle
@@ -63,10 +67,7 @@ class SettingsFragment : Fragment() {
         reminderRow.findViewById<ImageView>(R.id.rowIcon).setImageResource(R.drawable.ic_add)
 
         reminderRow.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, ReminderFragment())
-                .addToBackStack(null)
-                .commit()
+            findNavController().navigate(com.example.brainbyte.R.id.reminderFragment)
         }
     }
 }

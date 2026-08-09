@@ -22,7 +22,7 @@
         tools:layout="@layout/fragment_study">
         <argument
             android:name="deckId"
-            app:argType="long" />
+            app:argType="string" />
         <argument
             android:name="deckName"
             app:argType="string" />
@@ -57,5 +57,29 @@
         android:name="com.example.brainbyte.ui.settings.SettingsFragment"
         android:label="Settings"
         tools:layout="@layout/fragment_settings" />
+
+    <fragment
+        android:id="@+id/importFragment3"
+        android:name="com.example.brainbyte.ui.import_deck.ImportFragment3"
+        android:label="Import Deck Final"
+        tools:layout="@layout/fragment_import3" />
+
+    <fragment
+        android:id="@+id/changePasswordFragment"
+        android:name="com.example.brainbyte.ui.profile.ChangePasswordFragment"
+        android:label="Change Password"
+        tools:layout="@layout/fragment_change_password" />
+
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.example.brainbyte.ui.profile.EditProfileFragment"
+        android:label="Edit Profile"
+        tools:layout="@layout/fragment_edit_profile" />
+
+    <fragment
+        android:id="@+id/reminderFragment"
+        android:name="com.example.brainbyte.ui.reminder.ReminderFragment"
+        android:label="Reminder"
+        tools:layout="@layout/fragment_reminder" />
 
 </navigation>

@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface DeckDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertDeck(deck: Deck): Long
+    suspend fun insertDeck(deck: Deck)
 
     @Update
     suspend fun updateDeck(deck: Deck)
@@ -27,7 +27,7 @@ interface DeckDao {
     suspend fun getAllDecksList(): List<Deck>
 
     @Query("SELECT * FROM decks WHERE id = :deckId")
-    suspend fun getDeckById(deckId: Long): Deck?
+    suspend fun getDeckById(deckId: String): Deck?
 
     @Query("SELECT * FROM decks WHERE name = :name LIMIT 1")
     suspend fun getDeckByName(name: String): Deck?

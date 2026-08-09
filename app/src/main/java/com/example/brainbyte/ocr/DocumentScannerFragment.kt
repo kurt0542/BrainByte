@@ -18,7 +18,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.brainbyte.ImportFragment2
+import com.example.brainbyte.ui.import_deck.ImportFragment2
+import androidx.navigation.fragment.findNavController
 import com.example.brainbyte.R
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
@@ -398,12 +399,10 @@ class DocumentScannerFragment : Fragment() {
             "${it.term}: ${it.definition}"
         }
 
-        val fragment = ImportFragment2.newInstance(textToPass)
-
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .addToBackStack(null)
-            .commit()
+        val bundle = android.os.Bundle().apply {
+            putString("recognizedText", textToPass)
+        }
+        findNavController().navigate(com.example.brainbyte.R.id.importFragment2, bundle)
     }
 
     override fun onDestroy() {

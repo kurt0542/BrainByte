@@ -1,4 +1,4 @@
-package com.example.brainbyte
+package com.example.brainbyte.ui.deck
 
 import com.example.brainbyte.R
 
@@ -14,10 +14,10 @@ import java.util.concurrent.TimeUnit
 
 class DeckAdapter(
     private val onDeckClick: (Deck) -> Unit,
-    private val getCardCount: suspend (Long) -> Int
+    private val getCardCount: suspend (String) -> Int
 ) : ListAdapter<Deck, DeckAdapter.DeckViewHolder>(DeckDiffCallback()) {
 
-    private val cardCounts = mutableMapOf<Long, Int>()
+    private val cardCounts = mutableMapOf<String, Int>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeckViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -29,7 +29,7 @@ class DeckAdapter(
         holder.bind(getItem(position))
     }
 
-    fun updateCardCount(deckId: Long, count: Int) {
+    fun updateCardCount(deckId: String, count: Int) {
         cardCounts[deckId] = count
         val position = currentList.indexOfFirst { it.id == deckId }
         if (position >= 0) {

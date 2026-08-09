@@ -1,4 +1,4 @@
-package com.example.brainbyte
+package com.example.brainbyte.ui.import_deck
 
 import com.example.brainbyte.R
 
@@ -16,6 +16,8 @@ import com.example.brainbyte.data.BrainByteDatabase
 import com.example.brainbyte.data.repository.FlashcardRepository
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import com.example.brainbyte.ui.deck.DeckSelectionAdapter
+import androidx.navigation.fragment.findNavController
 
 class ImportFragment2 : Fragment() {
 
@@ -80,19 +82,16 @@ class ImportFragment2 : Fragment() {
         }
     }
 
-    private fun navigateToAddFlashcards(deckName: String, deckId: Long? = null) {
+    private fun navigateToAddFlashcards(deckName: String, deckId: String? = null) {
         val recognizedText = arguments?.getString("recognizedText")
 
-        val fragment = ImportFragment3.newInstance(
-            deckName = deckName,
-            deckId = deckId,
-            recognizedText = recognizedText
-        )
+        val bundle = android.os.Bundle().apply {
+            putString("deckName", deckName)
+            deckId?.let { putString("deckId", it) }
+            recognizedText?.let { putString("recognizedText", it) }
+        }
 
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .addToBackStack(null)
-            .commit()
+        findNavController().navigate(com.example.brainbyte.R.id.importFragment3, bundle)
     }
 
     companion object {
