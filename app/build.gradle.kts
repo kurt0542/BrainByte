@@ -64,4 +64,8 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation("io.appwrite:sdk-for-android:5.1.0")
+
+    implementation("androidx.room:room-runtime")
+    implementation("androidx.room:room-ktx")
+    ksp("androidx.room:room-compiler")
 }
