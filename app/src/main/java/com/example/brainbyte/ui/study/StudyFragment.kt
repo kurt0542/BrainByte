@@ -222,8 +222,8 @@ class StudyFragment : Fragment() {
     }
 
     companion object {
-        private const val ARG_DECK_ID = "deck_id"
-        private const val ARG_DECK_NAME = "deck_name"
+        private const val ARG_DECK_ID = "deckId"
+        private const val ARG_DECK_NAME = "deckName"
 
         fun newInstance(deckId: String, deckName: String) = StudyFragment().apply {
             arguments = Bundle().apply {
