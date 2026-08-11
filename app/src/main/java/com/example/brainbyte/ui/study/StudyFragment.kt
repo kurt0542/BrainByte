@@ -37,6 +37,7 @@ class StudyFragment : Fragment() {
     private lateinit var completionView: View
     private lateinit var completionStats: TextView
     private lateinit var btnStudyAgain: MaterialButton
+    private lateinit var btnTakeQuiz: MaterialButton
     private lateinit var btnFinishDeck: MaterialButton
 
     private val viewModel: StudyViewModel by viewModels()
@@ -75,6 +76,7 @@ class StudyFragment : Fragment() {
         completionView = view.findViewById(R.id.completion_view)
         completionStats = view.findViewById(R.id.completion_stats)
         btnStudyAgain = view.findViewById(R.id.btn_study_again)
+        btnTakeQuiz = view.findViewById(R.id.btn_take_quiz)
         btnFinishDeck = view.findViewById(R.id.btn_finish_deck)
     }
 
@@ -120,6 +122,13 @@ class StudyFragment : Fragment() {
             progressBar.visibility = View.VISIBLE
             
             viewModel.startStudySession(deckId)
+        }
+
+        btnTakeQuiz.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView, com.example.brainbyte.ui.quiz.QuizFragment.newInstance(deckId))
+                .addToBackStack(null)
+                .commit()
         }
 
         btnFinishDeck.setOnClickListener {

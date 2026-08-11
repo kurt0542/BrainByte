@@ -224,6 +224,16 @@
             android:layout_marginTop="32dp"/>
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_take_quiz"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Take AI Quiz"
+            android:backgroundTint="#FF9800"
+            android:textColor="@android:color/white"
+            app:cornerRadius="12dp"
+            android:layout_marginTop="12dp"/>
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_finish_deck"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="match_parent"
