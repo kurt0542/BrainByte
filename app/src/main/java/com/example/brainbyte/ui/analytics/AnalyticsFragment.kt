@@ -1,18 +1,24 @@
 package com.example.brainbyte.ui.analytics
 
-import com.example.brainbyte.R
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.brainbyte.R
 import com.google.android.material.progressindicator.CircularProgressIndicator
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class AnalyticsFragment : Fragment() {
+
+    private val viewModel: AnalyticsViewModel by viewModels()
 
     private lateinit var circularChart: CircularProgressIndicator
     private lateinit var percentageText: TextView
@@ -29,7 +35,8 @@ class AnalyticsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews(view)
-        setupMockData()
+        setupRecyclerView()
+        observeViewModel()
     }
 
     private fun initViews(view: View) {
@@ -38,23 +45,19 @@ class AnalyticsFragment : Fragment() {
         historyRecyclerView = view.findViewById(R.id.historyRecyclerView)
     }
 
-    private fun setupMockData() {
-        // Mock overall progress
-        val mockPercentage = 85
-        circularChart.progress = mockPercentage
-        percentageText.text = "$mockPercentage%"
-
-        // Mock quiz history
-        val mockHistory = listOf(
-            QuizHistoryItem("Biology 101 - Cell Structure", "9/10"),
-            QuizHistoryItem("Spanish Vocabulary - Week 3", "18/20"),
-            QuizHistoryItem("World History - WWII", "7/10"),
-            QuizHistoryItem("Chemistry - Periodic Table", "10/10"),
-            QuizHistoryItem("Geography - Capitals", "14/15")
-        )
-
-        adapter = AnalyticsHistoryAdapter(mockHistory)
+    private fun setupRecyclerView() {
+        adapter = AnalyticsHistoryAdapter(emptyList())
         historyRecyclerView.layoutManager = LinearLayoutManager(context)
         historyRecyclerView.adapter = adapter
+    }
+
+    private fun observeViewModel() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.uiState.collect { state ->
+                circularChart.progress = state.accuracyPercentage
+                percentageText.text = "${state.accuracyPercentage}%"
+                adapter.updateData(state.history)
+            }
+        }
     }
 }

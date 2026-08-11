@@ -8,13 +8,13 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-data class QuizHistoryItem(
-    val title: String,
-    val score: String
-)
+import com.example.brainbyte.data.entity.StudySession
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class AnalyticsHistoryAdapter(
-    private val items: List<QuizHistoryItem>
+    private var items: List<StudySession>
 ) : RecyclerView.Adapter<AnalyticsHistoryAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -30,9 +30,17 @@ class AnalyticsHistoryAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
-        holder.quizTitle.text = item.title
-        holder.quizScore.text = item.score
+        val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+        val dateString = dateFormat.format(Date(item.startTime))
+        
+        holder.quizTitle.text = "Session on $dateString"
+        holder.quizScore.text = "${item.correctCount}/${item.totalCards}"
     }
 
     override fun getItemCount() = items.size
+    
+    fun updateData(newItems: List<StudySession>) {
+        items = newItems
+        notifyDataSetChanged()
+    }
 }

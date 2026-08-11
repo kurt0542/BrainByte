@@ -28,6 +28,7 @@ class HomeFragment : Fragment() {
     private lateinit var tvRecentDeckCount: TextView
     private lateinit var tvEmptyDecksMsg: TextView
     private lateinit var btnStudyNow: MaterialButton
+    private lateinit var btnHomeTakeQuiz: MaterialButton
     private lateinit var actionScan: MaterialCardView
     private lateinit var actionCreate: MaterialCardView
 
@@ -55,6 +56,7 @@ class HomeFragment : Fragment() {
         tvRecentDeckCount = view.findViewById(R.id.tv_recent_deck_count)
         tvEmptyDecksMsg = view.findViewById(R.id.tv_empty_decks_msg)
         btnStudyNow = view.findViewById(R.id.btn_study_now)
+        btnHomeTakeQuiz = view.findViewById(R.id.btn_home_take_quiz)
         actionScan = view.findViewById(R.id.action_scan)
         actionCreate = view.findViewById(R.id.action_create)
     }
@@ -71,6 +73,13 @@ class HomeFragment : Fragment() {
         btnStudyNow.setOnClickListener {
             mostRecentDeck?.let { deck ->
                 val action = HomeFragmentDirections.actionHomeFragmentToStudyFragment(deck.id, deck.name)
+                findNavController().navigate(action)
+            }
+        }
+
+        btnHomeTakeQuiz.setOnClickListener {
+            mostRecentDeck?.let { deck ->
+                val action = HomeFragmentDirections.actionHomeFragmentToQuizFragment(deck.id)
                 findNavController().navigate(action)
             }
         }

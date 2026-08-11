@@ -194,6 +194,18 @@
                     android:text="Study"
                     app:cornerRadius="8dp"
                     app:backgroundTint="#6200EE"
+                    app:layout_constraintEnd_toStartOf="@id/btn_home_take_quiz"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginEnd="8dp"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_home_take_quiz"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Quiz"
+                    app:cornerRadius="8dp"
+                    app:backgroundTint="#FF9800"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"/>

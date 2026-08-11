@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_homeFragment_to_studyFragment"
             app:destination="@id/studyFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_quizFragment"
+            app:destination="@id/quizFragment" />
     </fragment>
 
     <fragment
@@ -25,6 +28,16 @@
             app:argType="string" />
         <argument
             android:name="deckName"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/quizFragment"
+        android:name="com.example.brainbyte.ui.quiz.QuizFragment"
+        android:label="Quiz"
+        tools:layout="@layout/fragment_quiz">
+        <argument
+            android:name="deckId"
             app:argType="string" />
     </fragment>
 
