@@ -3,19 +3,19 @@ package com.example.brainbyte.ui.auth
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.brainbyte.R
-import com.example.brainbyte.constants.APPWRITE_PROJECT_ID
-import com.example.brainbyte.constants.APPWRITE_PUBLIC_ENDPOINT
 import com.example.brainbyte.ui.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
-import io.appwrite.Client
-import io.appwrite.services.Account
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AuthActivity : AppCompatActivity() {
+    private val authViewModel: AuthViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -27,24 +27,24 @@ class AuthActivity : AppCompatActivity() {
                 .add(R.id.fragmentContainerView, LoginFragment())
                 .commit()
         }
+
+        lifecycleScope.launch {
+            authViewModel.uiState.collectLatest { state ->
+                when (state) {
+                    is AuthUiState.Success -> {
+                        startActivity(Intent(this@AuthActivity, MainActivity::class.java))
+                        finish()
+                    }
+                    else -> {
+                        // Stay on this screen
+                    }
+                }
+            }
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        val client = Client(this)
-            .setEndpoint(APPWRITE_PUBLIC_ENDPOINT)
-            .setProject(APPWRITE_PROJECT_ID)
-        val account = Account(client)
-        
-        lifecycleScope.launch {
-            try {
-                account.get()
-                // If this succeeds, the user is logged in
-                startActivity(Intent(this@AuthActivity, MainActivity::class.java))
-                finish()
-            } catch (e: Exception) {
-                // Not logged in, stay on this screen
-            }
-        }
+        authViewModel.checkSession()
     }
 }

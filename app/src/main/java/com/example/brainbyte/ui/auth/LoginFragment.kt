@@ -24,7 +24,11 @@ import com.example.brainbyte.constants.APPWRITE_PUBLIC_ENDPOINT
 import io.appwrite.Client
 import io.appwrite.services.Account
 import kotlinx.coroutines.launch
+import androidx.fragment.app.activityViewModels
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 
+@AndroidEntryPoint
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -35,6 +39,8 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         val email = view.findViewById<TextInputEditText>(R.id.et_email)
         val password = view.findViewById<TextInputEditText>(R.id.et_password)
 
+        val authViewModel: AuthViewModel by activityViewModels()
+
         loginButton.setOnClickListener {
             val emailText = email.text.toString().trim()
             val passwordText = password.text.toString().trim()
@@ -44,23 +50,22 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                 return@setOnClickListener
             }
 
-            val client = Client(requireContext())
-                .setEndpoint(APPWRITE_PUBLIC_ENDPOINT)
-                .setProject(APPWRITE_PROJECT_ID)
-            val account = Account(client)
+            authViewModel.login(emailText, passwordText)
+        }
 
-            viewLifecycleOwner.lifecycleScope.launch {
-                try {
-                    account.createEmailPasswordSession(
-                        email = emailText,
-                        password = passwordText
-                    )
-                    
-                    val intent = Intent(requireContext(), MainActivity::class.java)
-                    startActivity(intent)
-                    requireActivity().finish()
-                } catch (e: Exception) {
-                    Toast.makeText(requireContext(), "Login Failed: ${e.message}", Toast.LENGTH_LONG).show()
+        viewLifecycleOwner.lifecycleScope.launch {
+            authViewModel.uiState.collectLatest { state ->
+                when (state) {
+                    is AuthUiState.Success -> {
+                        val intent = Intent(requireContext(), MainActivity::class.java)
+                        startActivity(intent)
+                        requireActivity().finish()
+                    }
+                    is AuthUiState.Error -> {
+                        Toast.makeText(requireContext(), "Login Failed: ${state.message}", Toast.LENGTH_LONG).show()
+                        authViewModel.resetState()
+                    }
+                    else -> {}
                 }
             }
         }

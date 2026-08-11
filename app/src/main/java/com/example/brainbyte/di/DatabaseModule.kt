@@ -33,6 +33,16 @@ object DatabaseModule {
     }
 
     @Provides
+    fun provideProfileDao(database: BrainByteDatabase): com.example.brainbyte.data.dao.ProfileDao {
+        return database.profileDao()
+    }
+
+    @Provides
+    fun provideStudySessionDao(database: BrainByteDatabase): com.example.brainbyte.data.dao.StudySessionDao {
+        return database.studySessionDao()
+    }
+
+    @Provides
     @Singleton
     fun provideFlashcardRepository(database: BrainByteDatabase): FlashcardRepository {
         return FlashcardRepository(database)

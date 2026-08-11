@@ -23,7 +23,11 @@ import io.appwrite.Client
 import io.appwrite.ID
 import io.appwrite.services.Account
 import kotlinx.coroutines.launch
+import androidx.fragment.app.activityViewModels
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 
+@AndroidEntryPoint
 class SignupFragment : Fragment(R.layout.fragment_signup) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -140,6 +144,8 @@ class SignupFragment : Fragment(R.layout.fragment_signup) {
             } else false
         }
 
+        val authViewModel: AuthViewModel by activityViewModels()
+
         // --- APPWRITE AUTHENTICATION SETUP ---
         signupButton.setOnClickListener {
             val emailText = email.text.toString().trim()
@@ -152,30 +158,25 @@ class SignupFragment : Fragment(R.layout.fragment_signup) {
                 return@setOnClickListener
             }
 
-            // Initialize Appwrite Client and Account
-            val client = Client(requireContext())
-                .setEndpoint(APPWRITE_PUBLIC_ENDPOINT)
-                .setProject(APPWRITE_PROJECT_ID)
-            val account = Account(client)
+            authViewModel.signup(emailText, passwordText, nameText)
+        }
 
-            // Launch Coroutine for network request
-            viewLifecycleOwner.lifecycleScope.launch {
-                try {
-                    val user = account.create(
-                        userId = ID.unique(),
-                        email = emailText,
-                        password = passwordText,
-                        name = nameText
-                    )
-                    Toast.makeText(requireContext(), "Account created successfully!", Toast.LENGTH_SHORT).show()
-
-                    // Navigate to Login after successful registration
-                    parentFragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainerView, LoginFragment())
-                        .commit()
-
-                } catch (e: Exception) {
-                    Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_LONG).show()
+        viewLifecycleOwner.lifecycleScope.launch {
+            authViewModel.uiState.collectLatest { state ->
+                when (state) {
+                    is AuthUiState.Success -> {
+                        Toast.makeText(requireContext(), "Account created successfully!", Toast.LENGTH_SHORT).show()
+                        authViewModel.resetState()
+                        // Navigate to Login after successful registration
+                        parentFragmentManager.beginTransaction()
+                            .replace(R.id.fragmentContainerView, LoginFragment())
+                            .commit()
+                    }
+                    is AuthUiState.Error -> {
+                        Toast.makeText(requireContext(), "Error: ${state.message}", Toast.LENGTH_LONG).show()
+                        authViewModel.resetState()
+                    }
+                    else -> {}
                 }
             }
         }
