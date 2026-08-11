@@ -33,7 +33,6 @@ class StudyFragment : Fragment() {
     private lateinit var tapHint: TextView
     private lateinit var btnPrevious: MaterialButton
     private lateinit var btnNext: MaterialButton
-    private lateinit var btnShuffle: ImageButton
     private lateinit var completionView: View
     private lateinit var completionStats: TextView
     private lateinit var btnStudyAgain: MaterialButton
@@ -72,7 +71,6 @@ class StudyFragment : Fragment() {
         tapHint = view.findViewById(R.id.tap_hint)
         btnPrevious = view.findViewById(R.id.btn_previous)
         btnNext = view.findViewById(R.id.btn_next)
-        btnShuffle = view.findViewById(R.id.btn_shuffle)
         completionView = view.findViewById(R.id.completion_view)
         completionStats = view.findViewById(R.id.completion_stats)
         btnStudyAgain = view.findViewById(R.id.btn_study_again)
@@ -105,10 +103,6 @@ class StudyFragment : Fragment() {
         btnNext.setOnClickListener {
             viewModel.answerCard(true) // Assuming next means correct for now or just advancing
             isShowingTerm = true
-        }
-
-        btnShuffle.setOnClickListener {
-            // Ideally handled by viewModel, skipped for simplicity now or can trigger a reload
         }
 
         btnStudyAgain.setOnClickListener {

@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/light_grey_background"
-    android:fillViewport="true"
+    android:paddingBottom="80dp"
     tools:context=".StudyFragment">
-
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
 
     <!-- Header -->
     <ImageButton
@@ -37,22 +33,9 @@
         android:ellipsize="end"
         android:maxLines="1"
         app:layout_constraintStart_toEndOf="@id/btn_back"
-        app:layout_constraintEnd_toStartOf="@id/btn_shuffle"
         app:layout_constraintTop_toTopOf="@id/btn_back"
         app:layout_constraintBottom_toBottomOf="@id/btn_back"
         android:layout_marginHorizontal="8dp"/>
-
-    <ImageButton
-        android:id="@+id/btn_shuffle"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/ic_cards"
-        android:contentDescription="Shuffle cards"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_margin="8dp"
-        app:tint="@color/black_text"/>
 
     <!-- Progress indicator -->
     <TextView
@@ -86,7 +69,8 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/flashcard_container"
         android:layout_width="0dp"
-        android:layout_height="400dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/btn_previous"
         app:cardCornerRadius="24dp"
         app:cardElevation="8dp"
         app:cardBackgroundColor="@android:color/white"
@@ -114,19 +98,22 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/card_content"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:text="Flashcard content goes here"
-                android:textColor="@color/black_text"
-                android:textSize="24sp"
-                android:gravity="center"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/card_label"
                 app:layout_constraintBottom_toTopOf="@id/tap_hint"
-                android:layout_marginTop="16dp"/>
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="32dp"
+                android:text="Flashcard content goes here"
+                android:textColor="@color/black_text"
+                android:gravity="center"
+                app:autoSizeTextType="uniform"
+                app:autoSizeMinTextSize="14sp"
+                app:autoSizeMaxTextSize="32sp"/>
 
             <TextView
                 android:id="@+id/tap_hint"
@@ -148,6 +135,8 @@
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="0dp"
         android:layout_height="56dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
         android:text="@string/previous_button"
         android:textColor="@color/purple_primary"
         app:strokeColor="@color/purple_primary"
@@ -164,17 +153,18 @@
         android:id="@+id/btn_next"
         android:layout_width="0dp"
         android:layout_height="56dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
         android:text="@string/next_button"
         android:backgroundTint="@color/purple_primary"
         android:textColor="@android:color/white"
         app:cornerRadius="12dp"
         app:layout_constraintStart_toEndOf="@id/btn_previous"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/flashcard_container"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@id/btn_previous"
+        app:layout_constraintBottom_toBottomOf="@id/btn_previous"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="24dp"/>
+        android:layout_marginEnd="24dp"/>
 
     <!-- Completion View (Hidden by default) -->
     <LinearLayout
@@ -247,5 +237,4 @@
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
 
