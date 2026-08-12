@@ -38,6 +38,9 @@
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="32dp"
         android:hint="Full Name"
+        app:boxStrokeColor="@color/grey_text"
+        android:textColorHint="@color/grey_text"
+        app:hintTextColor="@color/purple_primary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title">
@@ -46,6 +49,7 @@
             android:id="@+id/etName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/black_text"
             android:text="John Doe" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -57,6 +61,9 @@
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="16dp"
         android:hint="Username"
+        app:boxStrokeColor="@color/grey_text"
+        android:textColorHint="@color/grey_text"
+        app:hintTextColor="@color/purple_primary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/nameInputLayout">
@@ -65,6 +72,7 @@
             android:id="@+id/etUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/black_text"
             android:text="johndoe123" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -76,6 +84,9 @@
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="16dp"
         android:hint="Email"
+        app:boxStrokeColor="@color/grey_text"
+        android:textColorHint="@color/grey_text"
+        app:hintTextColor="@color/purple_primary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/usernameInputLayout">
@@ -85,6 +96,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
+            android:textColor="@color/black_text"
             android:text="john.doe@example.com" />
     </com.google.android.material.textfield.TextInputLayout>
 
