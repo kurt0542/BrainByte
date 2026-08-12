@@ -16,6 +16,14 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import com.example.brainbyte.constants.APPWRITE_PROJECT_ID
+import com.example.brainbyte.constants.APPWRITE_PUBLIC_ENDPOINT
+import io.appwrite.Client
+import io.appwrite.services.Account
+import io.appwrite.services.Avatars
+import kotlinx.coroutines.launch
+import android.graphics.BitmapFactory
 
 class SettingsFragment : Fragment() {
 
@@ -43,6 +51,46 @@ class SettingsFragment : Fragment() {
                 Toast.makeText(context, "Push Notifications Enabled!", Toast.LENGTH_SHORT).show()
             }
 
+        }
+
+        val usernameText = view.findViewById<TextView>(R.id.username_text)
+        val profileImage = view.findViewById<ImageView>(R.id.profile_image)
+        
+        val prefs = requireContext().getSharedPreferences("user_prefs", android.content.Context.MODE_PRIVATE)
+        val cachedName = prefs.getString("user_name", null)
+        val avatarFile = java.io.File(requireContext().cacheDir, "avatar.png")
+
+        if (cachedName != null && avatarFile.exists()) {
+            usernameText.text = cachedName
+            val bitmap = BitmapFactory.decodeFile(avatarFile.absolutePath)
+            profileImage.setImageBitmap(bitmap)
+            profileImage.alpha = 1f
+            return
+        }
+
+        val client = Client(requireContext())
+            .setEndpoint(APPWRITE_PUBLIC_ENDPOINT)
+            .setProject(APPWRITE_PROJECT_ID)
+        val account = Account(client)
+        val avatars = Avatars(client)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val user = account.get()
+                usernameText.text = user.name
+                prefs.edit().putString("user_name", user.name).apply()
+
+                val initialsBytes = avatars.getInitials(name = user.name)
+                avatarFile.writeBytes(initialsBytes)
+                
+                val bitmap = BitmapFactory.decodeByteArray(initialsBytes, 0, initialsBytes.size)
+                profileImage.setImageBitmap(bitmap)
+                profileImage.animate().alpha(1f).setDuration(300).start()
+            } catch (e: Exception) {
+                usernameText.text = "Guest"
+                profileImage.setImageResource(R.drawable.ic_profile)
+                profileImage.animate().alpha(1f).setDuration(300).start()
+            }
         }
     }
 

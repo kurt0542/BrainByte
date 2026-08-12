@@ -5,16 +5,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.brainbyte.R
+import com.example.brainbyte.constants.APPWRITE_PROJECT_ID
+import com.example.brainbyte.constants.APPWRITE_PUBLIC_ENDPOINT
 import com.example.brainbyte.data.entity.Deck
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.AndroidEntryPoint
+import io.appwrite.Client
+import io.appwrite.services.Account
+import io.appwrite.services.Avatars
 import kotlinx.coroutines.launch
+import android.graphics.BitmapFactory
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -31,6 +38,7 @@ class HomeFragment : Fragment() {
     private lateinit var btnHomeTakeQuiz: MaterialButton
     private lateinit var actionScan: MaterialCardView
     private lateinit var actionCreate: MaterialCardView
+    private lateinit var profileIcon: ImageView
 
     private var mostRecentDeck: Deck? = null
 
@@ -46,6 +54,39 @@ class HomeFragment : Fragment() {
         initViews(view)
         setupClickListeners()
         observeViewModel()
+        loadUserProfile()
+    }
+
+    private fun loadUserProfile() {
+        val avatarFile = java.io.File(requireContext().cacheDir, "avatar.png")
+        if (avatarFile.exists()) {
+            val bitmap = BitmapFactory.decodeFile(avatarFile.absolutePath)
+            profileIcon.setImageBitmap(bitmap)
+            profileIcon.alpha = 1f
+            return
+        }
+
+        val client = Client(requireContext())
+            .setEndpoint(APPWRITE_PUBLIC_ENDPOINT)
+            .setProject(APPWRITE_PROJECT_ID)
+        val account = Account(client)
+        val avatars = Avatars(client)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val user = account.get()
+                val initialsBytes = avatars.getInitials(name = user.name)
+                
+                avatarFile.writeBytes(initialsBytes)
+                
+                val bitmap = BitmapFactory.decodeByteArray(initialsBytes, 0, initialsBytes.size)
+                profileIcon.setImageBitmap(bitmap)
+                profileIcon.animate().alpha(1f).setDuration(300).start()
+            } catch (e: Exception) {
+                profileIcon.setImageResource(R.drawable.ic_profile)
+                profileIcon.animate().alpha(1f).setDuration(300).start()
+            }
+        }
     }
 
     private fun initViews(view: View) {
@@ -59,6 +100,7 @@ class HomeFragment : Fragment() {
         btnHomeTakeQuiz = view.findViewById(R.id.btn_home_take_quiz)
         actionScan = view.findViewById(R.id.action_scan)
         actionCreate = view.findViewById(R.id.action_create)
+        profileIcon = view.findViewById(R.id.profile_icon)
     }
 
     private fun setupClickListeners() {
