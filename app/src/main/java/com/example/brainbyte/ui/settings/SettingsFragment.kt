@@ -19,11 +19,15 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.brainbyte.constants.APPWRITE_PROJECT_ID
 import com.example.brainbyte.constants.APPWRITE_PUBLIC_ENDPOINT
+import com.example.brainbyte.ui.auth.AuthActivity
 import io.appwrite.Client
 import io.appwrite.services.Account
 import io.appwrite.services.Avatars
 import kotlinx.coroutines.launch
 import android.graphics.BitmapFactory
+import android.widget.Button
+import android.content.Intent
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class SettingsFragment : Fragment() {
 
@@ -65,32 +69,67 @@ class SettingsFragment : Fragment() {
             val bitmap = BitmapFactory.decodeFile(avatarFile.absolutePath)
             profileImage.setImageBitmap(bitmap)
             profileImage.alpha = 1f
-            return
+        } else {
+            val client = Client(requireContext())
+                .setEndpoint(APPWRITE_PUBLIC_ENDPOINT)
+                .setProject(APPWRITE_PROJECT_ID)
+            val account = Account(client)
+            val avatars = Avatars(client)
+
+            viewLifecycleOwner.lifecycleScope.launch {
+                try {
+                    val user = account.get()
+                    usernameText.text = user.name
+                    prefs.edit().putString("user_name", user.name).apply()
+
+                    val initialsBytes = avatars.getInitials(name = user.name)
+                    avatarFile.writeBytes(initialsBytes)
+                    
+                    val bitmap = BitmapFactory.decodeByteArray(initialsBytes, 0, initialsBytes.size)
+                    profileImage.setImageBitmap(bitmap)
+                    profileImage.animate().alpha(1f).setDuration(300).start()
+                } catch (e: Exception) {
+                    usernameText.text = "Guest"
+                    profileImage.setImageResource(R.drawable.ic_profile)
+                    profileImage.animate().alpha(1f).setDuration(300).start()
+                }
+            }
         }
 
-        val client = Client(requireContext())
-            .setEndpoint(APPWRITE_PUBLIC_ENDPOINT)
-            .setProject(APPWRITE_PROJECT_ID)
-        val account = Account(client)
-        val avatars = Avatars(client)
+        val btnSignOut = view.findViewById<Button>(R.id.btn_sign_out)
+        btnSignOut.setOnClickListener {
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Sign out")
+                .setMessage("Are you sure you want to sign out?")
+                .setPositiveButton("Sign out") { _, _ ->
+                    val client = Client(requireContext())
+                        .setEndpoint(APPWRITE_PUBLIC_ENDPOINT)
+                        .setProject(APPWRITE_PROJECT_ID)
+                    val account = Account(client)
+                    
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        try {
+                            account.deleteSession("current")
+                        } catch (e: Exception) {
+                            // Ignore, maybe no active session
+                        }
+                        
+                        // Clear local cache
+                        prefs.edit().remove("user_name").apply()
+                        if (avatarFile.exists()) {
+                            avatarFile.delete()
+                        }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            try {
-                val user = account.get()
-                usernameText.text = user.name
-                prefs.edit().putString("user_name", user.name).apply()
-
-                val initialsBytes = avatars.getInitials(name = user.name)
-                avatarFile.writeBytes(initialsBytes)
-                
-                val bitmap = BitmapFactory.decodeByteArray(initialsBytes, 0, initialsBytes.size)
-                profileImage.setImageBitmap(bitmap)
-                profileImage.animate().alpha(1f).setDuration(300).start()
-            } catch (e: Exception) {
-                usernameText.text = "Guest"
-                profileImage.setImageResource(R.drawable.ic_profile)
-                profileImage.animate().alpha(1f).setDuration(300).start()
-            }
+                        Toast.makeText(context, "Signed out successfully", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(requireContext(), AuthActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                    }
+                }
+                .setNegativeButton("Cancel") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .show()
         }
     }
 

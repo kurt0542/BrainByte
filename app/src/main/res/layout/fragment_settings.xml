@@ -137,6 +137,7 @@
                     android:layout_height="24dp" />
 
                 <Button
+                    android:id="@+id/btn_sign_out"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:backgroundTint="#E55D5D"
