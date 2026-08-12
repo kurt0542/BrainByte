@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,196 +7,199 @@
     android:background="@color/light_grey_background"
     tools:context=".ImportFragment3">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:paddingBottom="80dp">
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottom_bar_container">
 
-        <!-- Header -->
-        <TextView
-            android:id="@+id/add_flashcard_title"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/add_flashcard_title"
-            android:textColor="@color/purple_primary"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="16dp"/>
+            android:padding="20dp">
 
-        <!-- Deck Info Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/deck_info_card"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="2dp"
-            app:cardBackgroundColor="@color/purple_light"
-            app:layout_constraintTop_toBottomOf="@id/add_flashcard_title"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="16dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <!-- Header -->
+            <TextView
+                android:id="@+id/add_flashcard_title"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="12dp">
+                android:text="@string/add_flashcard_title"
+                android:textColor="@color/purple_primary"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="8dp"/>
+
+            <!-- Deck Info Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/deck_info_card"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/purple_light"
+                app:layout_constraintTop_toBottomOf="@id/add_flashcard_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="24dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/ic_card"
+                        app:tint="@color/purple_primary"
+                        android:contentDescription="@null"/>
+
+                    <TextView
+                        android:id="@+id/selected_deck_name"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
+                        android:text="@string/selected_deck_placeholder"
+                        android:textColor="@color/purple_primary"
+                        android:textSize="16sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/change_deck_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/change_deck"
+                        android:textColor="@color/purple_primary"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:padding="8dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"/>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Deck Name Section (TextInputLayout) -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/deck_name_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/deck_name_label"
+                android:textColorHint="#757575"
+                app:hintTextColor="@color/purple_primary"
+                app:boxStrokeColor="@color/purple_primary"
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusBottomEnd="12dp"
+                app:layout_constraintTop_toBottomOf="@id/deck_info_card"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="24dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/deck_name_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:textColor="@color/black_text"
+                    android:textSize="16sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Card Counter Header -->
+            <TextView
+                android:id="@+id/card_counter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/card_counter_placeholder"
+                android:textColor="@color/black_text"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@id/deck_name_layout"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="32dp"/>
+
+            <!-- Flashcards List -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/flashcards_recycler_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                app:layout_constraintTop_toBottomOf="@id/card_counter"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="16dp"/>
+
+            <!-- Empty State -->
+            <LinearLayout
+                android:id="@+id/empty_state_container"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="32dp"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/card_counter"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginTop="24dp">
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
                     android:src="@drawable/ic_card"
-                    app:tint="@color/purple_primary"
+                    app:tint="#BDBDBD"
                     android:contentDescription="@null"/>
 
                 <TextView
-                    android:id="@+id/selected_deck_name"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="12dp"
-                    android:text="@string/selected_deck_placeholder"
-                    android:textColor="@color/purple_primary"
-                    android:textSize="14sp"
-                    android:textStyle="bold"/>
-
-                <TextView
-                    android:id="@+id/change_deck_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/change_deck"
-                    android:textColor="@color/purple_primary"
-                    android:textSize="12sp"
-                    android:padding="8dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"/>
+                    android:text="@string/no_flashcards_message"
+                    android:textColor="#757575"
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:layout_marginTop="16dp"/>
 
             </LinearLayout>
 
-        </com.google.android.material.card.MaterialCardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 
-        <!-- Deck Name Section -->
-        <TextView
-            android:id="@+id/deck_name_label"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/deck_name_label"
-            android:textColor="@color/black_text"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/deck_info_card"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="16dp"/>
+    <!-- Bottom Action Bar for sticky finish button -->
+    <FrameLayout
+        android:id="@+id/bottom_bar_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:padding="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/deck_name_card"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="0dp"
-            app:strokeColor="#E0E0E0"
-            app:strokeWidth="1dp"
-            app:cardBackgroundColor="@color/white"
-            app:layout_constraintTop_toBottomOf="@id/deck_name_label"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="8dp">
-
-            <EditText
-                android:id="@+id/deck_name_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="48dp"
-                android:padding="12dp"
-                android:hint="@string/deck_name_hint"
-                android:textColorHint="#9E9E9E"
-                android:textColor="@color/black_text"
-                android:textSize="15sp"
-                android:background="@android:color/transparent"
-                android:inputType="text"
-                android:maxLines="1"
-                android:autofillHints="none"/>
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Card Counter Header -->
-        <TextView
-            android:id="@+id/card_counter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/card_counter_placeholder"
-            android:textColor="@color/black_text"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/deck_name_card"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="24dp"/>
-
-        <!-- Flashcards List -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/flashcards_recycler_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"
-            app:layout_constraintTop_toBottomOf="@id/card_counter"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="12dp"/>
-
-        <!-- Empty State -->
-        <LinearLayout
-            android:id="@+id/empty_state_container"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:padding="32dp"
-            android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/card_counter"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="12dp">
-
-            <ImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:src="@drawable/ic_card"
-                app:tint="@color/grey_text"
-                android:contentDescription="@null"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/no_flashcards_message"
-                android:textColor="@color/grey_text"
-                android:textSize="14sp"
-                android:gravity="center"
-                android:layout_marginTop="12dp"/>
-
-        </LinearLayout>
-
-        <!-- Finish Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_finish"
-            android:layout_width="0dp"
-            android:layout_height="56dp"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
             android:text="@string/finish_import"
             android:textAllCaps="false"
-            android:textSize="16sp"
-            android:textStyle="bold"
             android:textColor="@color/white"
-            app:backgroundTint="#4CAF50"
-            app:cornerRadius="28dp"
-            app:layout_constraintTop_toBottomOf="@id/flashcards_recycler_view"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="32dp"/>
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:backgroundTint="@color/btn_finish_tint"
+            app:cornerRadius="16dp"
+            app:elevation="4dp"
+            android:layout_marginBottom="80dp"/>
+    </FrameLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
